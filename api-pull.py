@@ -1,58 +1,41 @@
-import os
+"""API fetch script to add entries"""
+
 import requests
-import pandas as pd
-from dotenv import load_dotenv
+
+from sk_env import env, check_env, db_url
+
 from TokenHelper import TokenHelper
 
-load_dotenv() # Load environment variables from .env file
-env = {
-    "API_CLIENT_NAME": os.getenv("API_CLIENT_NAME"),
-    "API_CLIENT_SECRET": os.getenv("API_CLIENT_SECRET"),
-    "API_HOST": os.getenv("API_HOST")
-}
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-# def get_weather_data() -> pd.DataFrame:
+# innet https://portal.dev.innet.io
+# meteoblue https://measurements-api.meteoblue.com/v2/docs
 
-#     PARAMS = {
-#     }
-
-#     print(proxies)
-
-#     response = requests.get(url=API_ENDPOINT, params=PARAMS, proxies=proxies)
-#     response.raise_for_status()  # Raise an exception for bad responses
-
-
-#     data = response.json()  # Parse JSON response
-
-#     # # Extract relevant data and create DataFrame
-#     # df = pd.DataFrame({
-
-#     # })
-
-#     # return df
-
-def check_env() -> None:
-    for key, value in env.items():
-        if not value: raise ValueError(f"Ensure {key} is set in '.env' file")
+# def innet_fetch() -> pd.DataFrame:
+#     project_id: str = "bac738bc-5e8e-48ca-8e73-84397606cd9f"
 
 
 def main() -> None:
     check_env()
 
-    helper = TokenHelper(f"https://id.{env["API_HOST"]}", env["API_CLIENT_NAME"], env["API_CLIENT_SECRET"])
+    engine = create_engine(db_url)
+    session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+    helper = TokenHelper(f"https://id.{env["INNET_HOST"]}", env["INNET_CLIENT_NAME"], env["INNET_CLIENT_SECRET"])
 
     # Get token and expiry date of token
     token, expires_at = helper.get_token()
 
     auth_header = {"Authorization": "Bearer " + token}
-    response = requests.request("GET", f"https://meta.{env["API_HOST"]}/v1/site", headers=auth_header)
+    response = requests.request("GET", f"https://meta.{env["INNET_HOST"]}/v1/site", headers=auth_header)
 
     print("META:")
     print(response.json())
 
     response = requests.request(
         "GET",
-        f"https://data.{env["API_HOST"]}/v1/timeseries/measurements",
+        f"https://data.{env["INNET_HOST"]}/v1/timeseries/measurements",
         params={
             'site_id': 'BueroMEL'
         },
@@ -64,6 +47,7 @@ def main() -> None:
 
     # # Optionally, save to CSV
     # weather_df.to_csv('weather_data.csv', index=False)
+
 
 if __name__ == "__main__":
     try:
