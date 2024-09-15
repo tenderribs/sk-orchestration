@@ -2,17 +2,18 @@ from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Foreig
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+
 Base = declarative_base()
 
 
 class Provider(Base):
     __tablename__ = "provider"
 
-    def __init__(self, _name):
-        self.name = _name
+    def __init__(self, _id):
+        self.id = _id
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=True)
 
     sites = relationship("Site", back_populates="provider")
 
@@ -20,8 +21,12 @@ class Provider(Base):
 class Site(Base):
     __tablename__ = "site"
 
-    id = Column(Integer, primary_key=True, index=True)
-    provider_id = Column(Integer, ForeignKey("provider.id"))
+    def __init__(self, _id):
+        self.id = _id
+
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=True)
+    provider_id = Column(String, ForeignKey("provider.id"))
     WGS84_lat = Column(Float, nullable=False)
     WGS84_lon = Column(Float, nullable=False)
 
@@ -33,9 +38,9 @@ class Logger(Base):
     __tablename__ = "logger"
 
     id = Column(String, primary_key=True, index=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=True)
     active = Column(Boolean, nullable=False)
-    site_id = Column(Integer, ForeignKey("site.id"))
+    site_id = Column(String, ForeignKey("site.id"))
 
     site = relationship("Site", back_populates="loggers")
     data = relationship("LoggerData", back_populates="logger")

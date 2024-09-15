@@ -8,6 +8,7 @@ env = {
     "INNET_CLIENT_NAME": os.getenv("INNET_CLIENT_NAME"),
     "INNET_CLIENT_SECRET": os.getenv("INNET_CLIENT_SECRET"),
     "INNET_HOST": os.getenv("INNET_HOST"),
+    "INNET_PROJECT_ID": os.getenv("INNET_PROJECT_ID"),
     "POSTGRES_USER": os.getenv("POSTGRES_USER"),
     "POSTGRES_PASSWORD": os.getenv("POSTGRES_PASSWORD"),
     "POSTGRES_DB": os.getenv("POSTGRES_DB"),

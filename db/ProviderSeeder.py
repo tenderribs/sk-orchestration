@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Provider
+from db.models import Provider
 
 from db.env import db_url
 
@@ -10,7 +10,7 @@ session = Session()
 
 
 def create_providers():
-    session.add_all([Provider("ugz_intern"), Provider("innet"), Provider("meteoblue")])
+    session.add_all([Provider("ugz"), Provider("innet"), Provider("meteoblue")])
     session.commit()
 
 

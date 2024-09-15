@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from db.env import db_url, check_env
-from models import Base
+from db.models import Base
 
 check_env()
 
