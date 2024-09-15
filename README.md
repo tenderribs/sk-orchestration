@@ -22,3 +22,11 @@ Notice: ATM corporate proxies are completely bypassed out of convenience.
     ```sh
     pip install -r requirements.txt
     ```
+
+## Coding / Deployment
+
+Make sure you went through the installation steps. Then run migration files in terminal with `alembic` to ensure the database is ready.
+
+```
+alembic upgrade head
+```

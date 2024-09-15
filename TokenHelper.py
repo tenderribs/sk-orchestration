@@ -12,14 +12,17 @@ class TokenHelper:
     def get_token(self):
         url = f"{self.url}/realms/innet/protocol/openid-connect/token"
         payload = "grant_type=client_credentials"
-        proxies = {"http_proxy", "proxy...."}
+        # proxies = {"http_proxy", "proxy...."} # proxies disabled ATM
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
         response = requests.request(
             "POST",
             url,
-            proxies=proxies,
+            # proxies=proxies, # proxies disabled ATM
             headers=headers,
             data=payload,
             auth=HTTPBasicAuth(self.client_name, self.client_secret),
         ).json()
-        return response["access_token"], datetime.now() + timedelta(seconds=response["expires_in"])
+        return response["access_token"], datetime.now() + timedelta(
+            seconds=response["expires_in"]
+        )
