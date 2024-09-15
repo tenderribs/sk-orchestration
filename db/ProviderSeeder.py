@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Provider
 
-from sk_env import db_url
+from db.env import db_url
 
 engine = create_engine(db_url)
 Session = sessionmaker(bind=engine)

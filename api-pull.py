@@ -2,7 +2,7 @@
 
 import requests
 
-from sk_env import env, check_env, db_url
+from db.env import env, check_env, db_url
 
 from TokenHelper import TokenHelper
 
