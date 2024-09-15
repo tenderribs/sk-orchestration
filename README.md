@@ -30,3 +30,9 @@ Make sure you went through the installation steps. Then run migration files in t
 ```
 alembic upgrade head
 ```
+
+Then to perform an API request manually (will be set to run periodically in the future), run
+
+```
+python3 api-pull.py
+```
