@@ -4,26 +4,17 @@ import pandas as pd
 from dotenv import load_dotenv
 from TokenHelper import TokenHelper
 
-
-# Load environment variables from .env file
-load_dotenv()
-
-SECRET = os.getenv("SECRET")
-
-# Get keys from environment variables
-http_proxy = os.getenv("HTTP_PROXY")
-https_proxy = os.getenv("HTTPS_PROXY")
+load_dotenv() # Load environment variables from .env file
+env = {
+    "API_CLIENT_NAME": os.getenv("API_CLIENT_NAME"),
+    "API_CLIENT_SECRET": os.getenv("API_CLIENT_SECRET"),
+    "API_HOST": os.getenv("API_HOST")
+}
 
 # def get_weather_data() -> pd.DataFrame:
 
 #     PARAMS = {
 #     }
-
-#     # # Proxy details
-#     # proxies = {
-#     #     "http": http_proxy,
-#     #     "https": https_proxy
-#     # }
 
 #     print(proxies)
 
@@ -40,32 +31,42 @@ https_proxy = os.getenv("HTTPS_PROXY")
 
 #     # return df
 
+def check_env() -> None:
+    for key, value in env.items():
+        if not value: raise ValueError(f"Ensure {key} is set in '.env' file")
+
+
+def main() -> None:
+    check_env()
+
+    helper = TokenHelper(f"https://id.{env["API_HOST"]}", env["API_CLIENT_NAME"], env["API_CLIENT_SECRET"])
+
+    # Get token and expiry date of token
+    token, expires_at = helper.get_token()
+
+    auth_header = {"Authorization": "Bearer " + token}
+    response = requests.request("GET", f"https://meta.{env["API_HOST"]}/v1/site", headers=auth_header)
+
+    print("META:")
+    print(response.json())
+
+    response = requests.request(
+        "GET",
+        f"https://data.{env["API_HOST"]}/v1/timeseries/measurements",
+        params={
+            'site_id': 'BueroMEL'
+        },
+        headers=auth_header,
+    )
+
+    print("\nDATA:")
+    print(response.json())
+
+    # # Optionally, save to CSV
+    # weather_df.to_csv('weather_data.csv', index=False)
+
 if __name__ == "__main__":
     try:
-        if not SECRET:
-            raise ValueError("Make sure all keys are set in your .env file.")
-
-        helper = TokenHelper("https://id.dev.innet.io", "ugz_test_client_ro", SECRET)
-
-        # Get token and expiry date of token
-        token, expires_at = helper.get_token()
-
-        auth_header = {"Authorization": "Bearer " + token}
-        response = requests.request("GET", "https://meta.dev.innet.io/v1/site", headers=auth_header)
-
-        print("META:")
-        print(response.json())
-
-        response = requests.request(
-            "GET",
-            "https://data.dev.innet.io/v1/timeseries/measurements?site_id=BueroMEL",
-            headers=auth_header,
-        )
-
-        print("\nDATA:")
-        print(response.json())
-
-        # Optionally, save to CSV
-        # weather_df.to_csv('weather_data.csv', index=False)
+        main()
     except Exception as e:
         print(f"An error occurred: {e}")
