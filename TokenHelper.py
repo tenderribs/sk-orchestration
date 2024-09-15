@@ -23,4 +23,6 @@ class TokenHelper:
             data=payload,
             auth=HTTPBasicAuth(self.client_name, self.client_secret),
         ).json()
-        return response["access_token"], datetime.now() + timedelta(seconds=response["expires_in"])
+        return response["access_token"], datetime.now() + timedelta(
+            seconds=response["expires_in"]
+        )
