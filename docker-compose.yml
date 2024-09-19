@@ -1,0 +1,68 @@
+services:
+  connectors: # container for the API connectors
+    image: "mcr.microsoft.com/devcontainers/anaconda:1-3"
+    container_name: sk-connectors
+    env_file:
+      - .env
+    volumes:
+      - .:/workspace/connectors
+    command: sleep infinity
+    networks:
+      - sk-net
+
+  web: # container running strapi and nuxt
+    image: "node:lts-bookworm"
+    container_name: sk-web
+    working_dir: /home/node/
+    user: "node"
+    ports:
+      - ${STRAPI_PORT:-1337}:${STRAPI_PORT:-1337} # for strapi
+      - ${NUXT_PORT:-3000}:${NUXT_PORT:-3000} # for nuxt
+    env_file:
+      - .env
+    environment:
+      # STRAPI:
+      HOST: ${STRAPI_HOST:-sk-web}
+      PORT: ${STRAPI_PORT:-1337}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: ${POSTGRES_HOST:-develop}
+      DATABASE_PORT: ${POSTGRES_PORT:-5432}
+      DATABASE_NAME: ${POSTGRES_DB:-sk-db}
+      DATABASE_USERNAME: ${POSTGRES_USER:-sk-db}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DATABASE_SSL: ${DATABASE_SSL:-false}
+      DATABASE_FILENAME: ${DATABASE_FILENAME:-}
+      APP_KEYS: ${APP_KEYS:-}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:-}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-}
+      # NUXT:
+    command: sleep infinity
+    volumes:
+      - ./frontend/:/home/node/frontend
+      - ./frontend/dist:/home/node/dist/:rw
+      - ./backend/:/home/node/backend
+    networks:
+      - sk-net
+
+  db: # local storage
+    container_name: sk-db
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - sk-db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    networks:
+      - sk-net
+
+volumes:
+  sk-db-data:
+    driver: local
+
+networks:
+  sk-net:
+    name: sk-network
+    driver: bridge
