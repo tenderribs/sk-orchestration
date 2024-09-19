@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "loggers",
+  "info": {
+    "singularName": "logger",
+    "pluralName": "loggers",
+    "displayName": " Logger"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "deveui": {
+      "type": "uid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "interval_s": {
+      "type": "integer"
+    },
+    "site": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::site.site",
+      "inversedBy": "loggers"
+    }
+  }
+}

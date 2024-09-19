@@ -1,0 +1,81 @@
+services:
+  connectors: # container for the API connectors
+    image: "continuumio/miniconda3"
+    container_name: sk-connectors
+    volumes:
+      - .:/workspace/connectors
+    command: sleep infinity
+    networks:
+      - sk-net
+
+  strapi:
+    image: "node:lts-alpine"
+    container_name: sk-strapi
+    working_dir: /home/node/
+    user: "node"
+    ports:
+      - "${STRAPI_PORT:-1337}:${STRAPI_PORT:-1337}"
+    environment:
+      HOST: ${STRAPI_HOST:-sk-strapi}
+      PORT: ${STRAPI_PORT:-1337}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: ${POSTGRES_HOST:-develop}
+      DATABASE_PORT: ${POSTGRES_PORT:-5432}
+      DATABASE_NAME: ${POSTGRES_DB:-sk-db}
+      DATABASE_USERNAME: ${POSTGRES_USER:-sk-db}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DATABASE_SSL: ${DATABASE_SSL:-false}
+      DATABASE_FILENAME: ${DATABASE_FILENAME:-}
+      APP_KEYS: ${APP_KEYS:-}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:-}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-}
+      # VUE:
+    command: sleep infinity
+    volumes:
+      - ./backend/:/home/node
+    networks:
+      - sk-net
+
+  web:
+    image: "node:lts-alpine"
+    container_name: sk-web
+    working_dir: /home/node/
+    user: "node"
+    ports:
+      - ${VITE_PORT:-3000}:${VITE_PORT:-3000}
+    environment:
+      VITE_HOST: ${VITE_HOST:-sk-web}
+      VITE_PORT: ${VITE_PORT:-3000}
+    command: sleep infinity
+    volumes:
+      - ./frontend/:/home/node
+      - ./frontend/dist:/home/node/dist/:rw
+    networks:
+      - sk-net
+
+  db: # local storage
+    container_name: sk-db
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sk-db}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-sk-db}
+      POSTGRES_HOST: ${POSTGRES_HOST:-sk-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+    volumes:
+      - sk-db-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    networks:
+      - sk-net
+
+volumes:
+  sk-db-data:
+    driver: local
+
+networks:
+  sk-net:
+    name: sk-network
+    driver: bridge

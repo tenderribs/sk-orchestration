@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sites",
+  "info": {
+    "singularName": "site",
+    "pluralName": "sites",
+    "displayName": "Site",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "WGS84_lat": {
+      "type": "decimal"
+    },
+    "WGS84_lon": {
+      "type": "decimal"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "loggers": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::logger.logger",
+      "mappedBy": "site"
+    }
+  }
+}
