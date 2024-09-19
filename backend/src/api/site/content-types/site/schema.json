@@ -13,22 +13,30 @@
   "pluginOptions": {},
   "attributes": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "WGS84_lat": {
-      "type": "decimal"
+      "type": "decimal",
+      "required": true
     },
     "WGS84_lon": {
-      "type": "decimal"
-    },
-    "provider": {
-      "type": "string"
+      "type": "decimal",
+      "required": true
     },
     "loggers": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::logger.logger",
       "mappedBy": "site"
+    },
+    "provider": {
+      "type": "enumeration",
+      "enum": [
+        "ugz_intern",
+        "innet",
+        "meteoblue"
+      ]
     }
   }
 }

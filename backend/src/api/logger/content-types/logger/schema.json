@@ -4,30 +4,58 @@
   "info": {
     "singularName": "logger",
     "pluralName": "loggers",
-    "displayName": " Logger"
+    "displayName": " Logger",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "deveui": {
-      "type": "uid"
+      "type": "uid",
+      "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "minLength": 1
     },
     "active": {
-      "type": "boolean"
+      "type": "boolean",
+      "required": true,
+      "default": false
     },
     "interval_s": {
-      "type": "integer"
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "min": 0
     },
     "site": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::site.site",
       "inversedBy": "loggers"
+    },
+    "installations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::installation.installation",
+      "mappedBy": "logger"
+    },
+    "device_model": {
+      "type": "enumeration",
+      "enum": [
+        "MeteoHelixPro",
+        "DecentLab-SHT35-002"
+      ]
+    },
+    "measurements": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::measurement.measurement",
+      "mappedBy": "logger"
     }
   }
 }

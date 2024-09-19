@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "installations",
+  "info": {
+    "singularName": "installation",
+    "pluralName": "installations",
+    "displayName": "Installation",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "technician": {
+      "type": "string",
+      "required": true
+    },
+    "start": {
+      "type": "datetime",
+      "required": true
+    },
+    "end": {
+      "type": "datetime",
+      "required": true
+    },
+    "logger": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::logger.logger",
+      "inversedBy": "installations"
+    }
+  }
+}
