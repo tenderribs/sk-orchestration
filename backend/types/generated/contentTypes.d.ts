@@ -531,13 +531,12 @@ export interface ApiLoggerLogger extends Struct.CollectionTypeSchema {
   attributes: {
     deveui: Schema.Attribute.UID & Schema.Attribute.Required;
     name: Schema.Attribute.String &
-      Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 1;
       }>;
     active: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<false>;
+      Schema.Attribute.DefaultTo<true>;
     interval_s: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -628,10 +627,13 @@ export interface ApiSiteSite extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.String & Schema.Attribute.Required;
     WGS84_lat: Schema.Attribute.Decimal & Schema.Attribute.Required;
     WGS84_lon: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    loggers: Schema.Attribute.Relation<'oneToMany', 'api::logger.logger'>;
     provider: Schema.Attribute.Enumeration<
       ['ugz_intern', 'innet', 'meteoblue']
     >;
+    active: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    loggers: Schema.Attribute.Relation<'oneToMany', 'api::logger.logger'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

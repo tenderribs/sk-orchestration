@@ -18,13 +18,13 @@
     },
     "name": {
       "type": "string",
-      "required": true,
+      "required": false,
       "minLength": 1
     },
     "active": {
       "type": "boolean",
       "required": true,
-      "default": false
+      "default": true
     },
     "interval_s": {
       "type": "integer",
@@ -34,7 +34,10 @@
     },
     "device_model": {
       "type": "enumeration",
-      "enum": ["MeteoHelixPro", "DecentLab-SHT35-002"]
+      "enum": [
+        "MeteoHelixPro",
+        "DecentLab-SHT35-002"
+      ]
     },
     "site": {
       "type": "relation",

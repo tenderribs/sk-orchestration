@@ -24,19 +24,20 @@
       "type": "decimal",
       "required": true
     },
+    "provider": {
+      "type": "enumeration",
+      "enum": ["ugz_intern", "innet", "meteoblue"]
+    },
+    "active": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
     "loggers": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::logger.logger",
       "mappedBy": "site"
-    },
-    "provider": {
-      "type": "enumeration",
-      "enum": [
-        "ugz_intern",
-        "innet",
-        "meteoblue"
-      ]
     }
   }
 }
