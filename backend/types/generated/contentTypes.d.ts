@@ -547,13 +547,13 @@ export interface ApiLoggerLogger extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<0>;
+    device_model: Schema.Attribute.Enumeration<
+      ['MeteoHelixPro', 'DecentLab-SHT35-002']
+    >;
     site: Schema.Attribute.Relation<'manyToOne', 'api::site.site'>;
     installations: Schema.Attribute.Relation<
       'oneToMany',
       'api::installation.installation'
-    >;
-    device_model: Schema.Attribute.Enumeration<
-      ['MeteoHelixPro', 'DecentLab-SHT35-002']
     >;
     measurements: Schema.Attribute.Relation<
       'oneToMany',

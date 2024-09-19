@@ -32,6 +32,10 @@
       "default": 0,
       "min": 0
     },
+    "device_model": {
+      "type": "enumeration",
+      "enum": ["MeteoHelixPro", "DecentLab-SHT35-002"]
+    },
     "site": {
       "type": "relation",
       "relation": "manyToOne",
@@ -43,13 +47,6 @@
       "relation": "oneToMany",
       "target": "api::installation.installation",
       "mappedBy": "logger"
-    },
-    "device_model": {
-      "type": "enumeration",
-      "enum": [
-        "MeteoHelixPro",
-        "DecentLab-SHT35-002"
-      ]
     },
     "measurements": {
       "type": "relation",
