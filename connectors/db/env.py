@@ -8,19 +8,9 @@ env = {
     "INNET_CLIENT_NAME": os.getenv("INNET_CLIENT_NAME"),
     "INNET_CLIENT_SECRET": os.getenv("INNET_CLIENT_SECRET"),
     "INNET_HOST": os.getenv("INNET_HOST"),
-    "INNET_PROJECT_ID": os.getenv("INNET_PROJECT_ID"),
-    "POSTGRES_USER": os.getenv("POSTGRES_USER"),
-    "POSTGRES_PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-    "POSTGRES_DB": os.getenv("POSTGRES_DB"),
-    "POSTGRES_HOST": os.getenv("POSTGRES_HOST"),
+    "API_BASE_URL": os.getenv("API_BASE_URL"),
+    "CONNECTOR_API_TOKEN": os.getenv("CONNECTOR_API_TOKEN"),
 }
-
-db_url = "postgresql+psycopg2://%s:%s@%s:5432/%s" % (
-    env["POSTGRES_USER"],
-    env["POSTGRES_PASSWORD"],
-    env["POSTGRES_HOST"],
-    env["POSTGRES_DB"],
-)
 
 
 def check_env() -> None:

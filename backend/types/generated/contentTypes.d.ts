@@ -583,17 +583,20 @@ export interface ApiMeasurementMeasurement extends Struct.CollectionTypeSchema {
     value: Schema.Attribute.Decimal & Schema.Attribute.Required;
     type: Schema.Attribute.Enumeration<
       [
-        'temperature-c',
-        'relative-humidity-pct',
-        'dew-point-c',
-        'frost-point-c',
-        'solar-irradiation-pct',
-        'atmospheric-pressure-hpa',
-        'rain-mm',
+        'wind_speed_ms',
+        'east_wind_speed_ms',
+        'wind_speed_max_ms',
+        'humidity_pct',
+        'north_wind_speed_ms',
+        'irradiation_wm2',
+        'wind_direction_deg',
+        'pressure_hpa',
+        'temperature_c',
+        'battery_voltage_v',
       ]
     > &
       Schema.Attribute.Required;
-    timestamp: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    timestamp: Schema.Attribute.DateTime & Schema.Attribute.Required;
     installation: Schema.Attribute.Relation<
       'manyToOne',
       'api::installation.installation'
@@ -628,6 +631,7 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.UID & Schema.Attribute.Required;
     datasheet: Schema.Attribute.Media<'files'>;
     loggers: Schema.Attribute.Relation<'oneToMany', 'api::logger.logger'>;
+    field_mapping: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
