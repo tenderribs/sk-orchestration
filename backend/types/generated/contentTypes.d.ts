@@ -500,8 +500,13 @@ export interface ApiInstallationInstallation
   attributes: {
     technician: Schema.Attribute.String & Schema.Attribute.Required;
     start: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    end: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    end: Schema.Attribute.DateTime;
     logger: Schema.Attribute.Relation<'manyToOne', 'api::logger.logger'>;
+    site: Schema.Attribute.Relation<'manyToOne', 'api::site.site'>;
+    measurements: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::measurement.measurement'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -546,18 +551,11 @@ export interface ApiLoggerLogger extends Struct.CollectionTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<0>;
-    device_model: Schema.Attribute.Enumeration<
-      ['MeteoHelixPro', 'DecentLab-SHT35-002']
-    >;
-    site: Schema.Attribute.Relation<'manyToOne', 'api::site.site'>;
     installations: Schema.Attribute.Relation<
       'oneToMany',
       'api::installation.installation'
     >;
-    measurements: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::measurement.measurement'
-    >;
+    model: Schema.Attribute.Relation<'manyToOne', 'api::model.model'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -596,7 +594,10 @@ export interface ApiMeasurementMeasurement extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Required;
     timestamp: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    logger: Schema.Attribute.Relation<'manyToOne', 'api::logger.logger'>;
+    installation: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::installation.installation'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -609,6 +610,33 @@ export interface ApiMeasurementMeasurement extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::measurement.measurement'
     >;
+  };
+}
+
+export interface ApiModelModel extends Struct.CollectionTypeSchema {
+  collectionName: 'models';
+  info: {
+    singularName: 'model';
+    pluralName: 'models';
+    displayName: 'Device Model';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    name: Schema.Attribute.UID & Schema.Attribute.Required;
+    datasheet: Schema.Attribute.Media<'files'>;
+    loggers: Schema.Attribute.Relation<'oneToMany', 'api::logger.logger'>;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::model.model'>;
   };
 }
 
@@ -629,11 +657,15 @@ export interface ApiSiteSite extends Struct.CollectionTypeSchema {
     WGS84_lon: Schema.Attribute.Decimal & Schema.Attribute.Required;
     provider: Schema.Attribute.Enumeration<
       ['ugz_intern', 'innet', 'meteoblue']
-    >;
+    > &
+      Schema.Attribute.Required;
     active: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
-    loggers: Schema.Attribute.Relation<'oneToMany', 'api::logger.logger'>;
+    installations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::installation.installation'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1024,6 +1056,7 @@ declare module '@strapi/strapi' {
       'api::installation.installation': ApiInstallationInstallation;
       'api::logger.logger': ApiLoggerLogger;
       'api::measurement.measurement': ApiMeasurementMeasurement;
+      'api::model.model': ApiModelModel;
       'api::site.site': ApiSiteSite;
       'admin::permission': AdminPermission;
       'admin::user': AdminUser;

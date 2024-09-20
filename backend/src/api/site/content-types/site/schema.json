@@ -26,17 +26,22 @@
     },
     "provider": {
       "type": "enumeration",
-      "enum": ["ugz_intern", "innet", "meteoblue"]
+      "enum": [
+        "ugz_intern",
+        "innet",
+        "meteoblue"
+      ],
+      "required": true
     },
     "active": {
       "type": "boolean",
       "default": false,
       "required": true
     },
-    "loggers": {
+    "installations": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::logger.logger",
+      "target": "api::installation.installation",
       "mappedBy": "site"
     }
   }

@@ -2,13 +2,35 @@ services:
   connectors: # container for the API connectors
     image: "continuumio/miniconda3"
     container_name: sk-connectors
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sk-db}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-sk-db}
+      POSTGRES_HOST: ${POSTGRES_HOST:-sk-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:1337}
     volumes:
-      - .:/workspace/connectors
+      - ./connectors:/workspace
     command: sleep infinity
     networks:
       - sk-net
 
-  strapi:
+  compute: # for computations on data
+    image: "continuumio/miniconda3"
+    container_name: sk-compute
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sk-db}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-sk-db}
+      POSTGRES_HOST: ${POSTGRES_HOST:-sk-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+    volumes:
+      - ./compute:/workspace
+    command: sleep infinity
+    networks:
+      - sk-net
+
+  strapi: # REST API
     image: "node:lts-alpine"
     container_name: sk-strapi
     working_dir: /home/node/
@@ -30,7 +52,6 @@ services:
       API_TOKEN_SALT: ${API_TOKEN_SALT:-}
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
       TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-}
-      # VUE:
     command: sleep infinity
     volumes:
       - ./backend/:/home/node

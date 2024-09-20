@@ -33,10 +33,10 @@
       "type": "decimal",
       "required": true
     },
-    "logger": {
+    "installation": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::logger.logger",
+      "target": "api::installation.installation",
       "inversedBy": "measurements"
     }
   }
