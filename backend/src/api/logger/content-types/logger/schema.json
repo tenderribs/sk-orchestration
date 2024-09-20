@@ -4,29 +4,44 @@
   "info": {
     "singularName": "logger",
     "pluralName": "loggers",
-    "displayName": " Logger"
+    "displayName": " Logger",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "deveui": {
-      "type": "uid"
+      "type": "uid",
+      "required": true
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "required": false,
+      "minLength": 1
     },
     "active": {
-      "type": "boolean"
+      "type": "boolean",
+      "required": true,
+      "default": true
     },
     "interval_s": {
-      "type": "integer"
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "min": 0
     },
-    "site": {
+    "installations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::installation.installation",
+      "mappedBy": "logger"
+    },
+    "model": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::site.site",
+      "target": "api::model.model",
       "inversedBy": "loggers"
     }
   }

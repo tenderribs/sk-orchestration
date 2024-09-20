@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "measurements",
+  "info": {
+    "singularName": "measurement",
+    "pluralName": "measurements",
+    "displayName": "Measurement",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "value": {
+      "type": "decimal",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "temperature-c",
+        "relative-humidity-pct",
+        "dew-point-c",
+        "frost-point-c",
+        "solar-irradiation-pct",
+        "atmospheric-pressure-hpa",
+        "rain-mm"
+      ],
+      "required": true
+    },
+    "timestamp": {
+      "type": "decimal",
+      "required": true
+    },
+    "installation": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::installation.installation",
+      "inversedBy": "measurements"
+    }
+  }
+}
