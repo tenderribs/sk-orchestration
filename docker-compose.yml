@@ -2,13 +2,13 @@ services:
   connectors: # container for the API connectors
     image: "continuumio/miniconda3"
     container_name: sk-connectors
+    working_dir: /workspace
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-sk-db}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-sk-db}
-      POSTGRES_HOST: ${POSTGRES_HOST:-sk-db}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      INNET_CLIENT_NAME: ${INNET_CLIENT_NAME:-client}
+      INNET_CLIENT_SECRET: ${INNET_CLIENT_SECRET:-secret}
+      INNET_HOST: ${INNET_HOST:-dev.innet.io}
       API_BASE_URL: ${API_BASE_URL:-http://localhost:1337/api}
+      CONNECTOR_API_TOKEN: ${CONNECTOR_API_TOKEN:-token}
     volumes:
       - ./connectors:/workspace
     command: sleep infinity
@@ -18,6 +18,7 @@ services:
   compute: # for computations on data
     image: "continuumio/miniconda3"
     container_name: sk-compute
+    working_dir: /workspace
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-sk-db}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
