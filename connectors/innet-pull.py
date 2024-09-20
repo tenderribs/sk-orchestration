@@ -31,6 +31,7 @@ class TokenHelper:
             seconds=response["expires_in"]
         )
 
+
 # data = requests.request(
 #     "GET",
 #     f"https://data.{env['INNET_HOST']}/v1/timeseries/measurements",
@@ -58,12 +59,12 @@ class TokenHelper:
 
 #     print("Fetching active loggers")
 
-    # refresh_innet_sites(session, auth_header)
+# refresh_innet_sites(session, auth_header)
 
-    # active_sites: list(Site) = (
-    #     session.query(Site).filter_by(provider_id="innet", active=True).all()
-    # )
-    # fetch_active_site_data(session, auth_header, active_sites)
+# active_sites: list(Site) = (
+#     session.query(Site).filter_by(provider_id="innet", active=True).all()
+# )
+# fetch_active_site_data(session, auth_header, active_sites)
 
 
 if __name__ == "__main__":
@@ -71,19 +72,25 @@ if __name__ == "__main__":
         check_env()
 
         # Get authentication token
-        helper = TokenHelper(f"https://id.{env['INNET_HOST']}", env['INNET_CLIENT_NAME'], env['INNET_CLIENT_SECRET'])
+        helper = TokenHelper(
+            f"https://id.{env['INNET_HOST']}",
+            env["INNET_CLIENT_NAME"],
+            env["INNET_CLIENT_SECRET"],
+        )
 
         # Assume script execution complete before INNET token expiry
         token, expires_at = helper.get_token()
 
         innet_auth_header = {"Authorization": "Bearer " + token}
-        sk_db_auth_header = {"Authorization": "Bearer " + env['CONNECTOR_API_TOKEN']}
+        sk_db_auth_header = {"Authorization": "Bearer " + env["CONNECTOR_API_TOKEN"]}
 
         # Fetch internal index of INNET loggers
-        loggers = requests.request("GET", f"{env['API_BASE_URL']}/loggers", headers=sk_db_auth_header).json()
+        loggers = requests.request(
+            "GET", f"{env['API_BASE_URL']}/loggers", headers=sk_db_auth_header
+        ).json()
 
-        for logger in loggers['data']:
-            logger['deveui']
+        for logger in loggers["data"]:
+            print(logger["deveui"])
 
     except Exception as e:
         print(f"An error occurred: {e}")

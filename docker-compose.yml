@@ -1,14 +1,16 @@
 services:
   connectors: # container for the API connectors
-    image: "continuumio/miniconda3"
     container_name: sk-connectors
     working_dir: /workspace
     environment:
-      INNET_CLIENT_NAME: ${INNET_CLIENT_NAME:-client}
-      INNET_CLIENT_SECRET: ${INNET_CLIENT_SECRET:-secret}
+      INNET_CLIENT_NAME: ${INNET_CLIENT_NAME}
+      INNET_CLIENT_SECRET: ${INNET_CLIENT_SECRET}
       INNET_HOST: ${INNET_HOST:-dev.innet.io}
-      API_BASE_URL: ${API_BASE_URL:-http://localhost:1337/api}
-      CONNECTOR_API_TOKEN: ${CONNECTOR_API_TOKEN:-token}
+      API_BASE_URL: ${API_BASE_URL:-http://sk-strapi:1337/api}
+      CONNECTOR_API_TOKEN: ${CONNECTOR_API_TOKEN}
+    build:
+      context: .
+      dockerfile: ./connectors/Dockerfile
     volumes:
       - ./connectors:/workspace
     command: sleep infinity
