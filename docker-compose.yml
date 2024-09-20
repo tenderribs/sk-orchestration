@@ -1,5 +1,6 @@
 services:
   connectors: # container for the API connectors
+    image: "continuumio/miniconda3"
     container_name: sk-connectors
     working_dir: /workspace
     environment:
@@ -8,12 +9,11 @@ services:
       INNET_HOST: ${INNET_HOST:-dev.innet.io}
       API_BASE_URL: ${API_BASE_URL:-http://sk-strapi:1337/api}
       CONNECTOR_API_TOKEN: ${CONNECTOR_API_TOKEN}
-    build:
-      context: .
-      dockerfile: ./connectors/Dockerfile
     volumes:
       - ./connectors:/workspace
-    command: sleep infinity
+    command: bash /workspace/entry-point.sh
+    depends_on:
+      - strapi
     networks:
       - sk-net
 
@@ -27,6 +27,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-sk-db}
       POSTGRES_HOST: ${POSTGRES_HOST:-sk-db}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+    depends_on:
+      - strapi
     volumes:
       - ./compute:/workspace
     command: sleep infinity
@@ -55,7 +57,10 @@ services:
       API_TOKEN_SALT: ${API_TOKEN_SALT:-}
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
       TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-}
-    command: sleep infinity
+    command: npm run develop
+    restart: on-failure
+    depends_on:
+      - db
     volumes:
       - ./backend/:/home/node
     networks:
@@ -71,6 +76,8 @@ services:
     environment:
       VITE_HOST: ${VITE_HOST:-sk-web}
       VITE_PORT: ${VITE_PORT:-3000}
+    depends_on:
+      - strapi
     command: sleep infinity
     volumes:
       - ./frontend/:/home/node
