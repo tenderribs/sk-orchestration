@@ -628,6 +628,7 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
     name: Schema.Attribute.UID & Schema.Attribute.Required;
     datasheet: Schema.Attribute.Media<'files'>;
     loggers: Schema.Attribute.Relation<'oneToMany', 'api::logger.logger'>;
+    field_mapping: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

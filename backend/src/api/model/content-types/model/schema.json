@@ -29,6 +29,9 @@
       "relation": "oneToMany",
       "target": "api::logger.logger",
       "mappedBy": "model"
+    },
+    "field_mapping": {
+      "type": "json"
     }
   }
 }
