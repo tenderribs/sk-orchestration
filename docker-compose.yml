@@ -57,7 +57,7 @@ services:
       API_TOKEN_SALT: ${API_TOKEN_SALT:-}
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
       TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-}
-    command: npm run develop
+    command: sleep infinity
     restart: on-failure
     depends_on:
       - db
