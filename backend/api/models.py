@@ -16,10 +16,16 @@ class Site(models.Model):
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
     masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
 
+    def __str__(self):
+        return f"{self.name} lat: {self.wgs84_lat} lon: {self.wgs84_lon}"
+
 
 class DeviceModel(models.Model):
     name = models.CharField(primary_key=True, unique=True, max_length=100)
     interval_s = models.IntegerField(default=600, validators=[MinValueValidator(0)])
+
+    def __str__(self):
+        return self.name
 
 
 class Logger(models.Model):
@@ -27,6 +33,9 @@ class Logger(models.Model):
     sensor_serial = models.CharField(unique=True, max_length=100)
 
     device_model = models.ForeignKey(DeviceModel, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.sensor_id
 
 
 class Installation(models.Model):
@@ -40,6 +49,9 @@ class Installation(models.Model):
     def clean(self):
         if self.end and self.start >= self.end:
             raise ValidationError("Start time must be earlier than end time.")
+
+    def __str__(self):
+        return f"site: {self.site} logger: {self.logger} start: {self.start} "
 
 
 class Measurement(models.Model):
@@ -60,3 +72,6 @@ class Measurement(models.Model):
     timestamp = models.DateTimeField()
 
     installation = models.ForeignKey(Installation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        f"{self.meas_type} {self.value} {self.timestamp}"
