@@ -12,7 +12,10 @@ Get database set up:
 # Run the migrations
 python manage.py migrate
 
-# And create a superuser
+# Seed data
+python manage.py flush && python manage.py seed
+
+# And create a superuser for the admin panel
 python manage.py createsuperuser --username admin --email admin@example.com
 ```
 
