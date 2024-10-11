@@ -17,7 +17,7 @@ class Site(models.Model):
     masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
 
     def __str__(self):
-        return f"{self.name} lat: {self.wgs84_lat} lon: {self.wgs84_lon}"
+        return f"{self.name} lat: {round(self.wgs84_lat, 2)} lon: {round(self.wgs84_lon, 2)} masl: {round(self.masl, 1)}"
 
 
 class DeviceModel(models.Model):
