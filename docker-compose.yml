@@ -1,68 +1,46 @@
 services:
   connectors: # container for the API connectors
-    image: "continuumio/miniconda3"
+    image: "python:3.12-bookworm"
     container_name: sk-connectors
-    working_dir: /workspace
-    environment:
-      INNET_CLIENT_NAME: ${INNET_CLIENT_NAME}
-      INNET_CLIENT_SECRET: ${INNET_CLIENT_SECRET}
-      INNET_HOST: ${INNET_HOST:-dev.innet.io}
-      API_BASE_URL: ${API_BASE_URL:-http://sk-strapi:1337/api}
-      CONNECTOR_API_TOKEN: ${CONNECTOR_API_TOKEN}
+    working_dir: /usr/src/
+    env_file:
+      - .env
     volumes:
-      - ./connectors:/workspace
-    command: bash /workspace/entry-point.sh
+      - ./connectors:/usr/src/
+    command: sleep infinity
     depends_on:
-      - strapi
+      - api
     networks:
       - sk-net
 
   compute: # for computations on data
-    image: "continuumio/miniconda3"
+    image: "python:3.12-bookworm"
     container_name: sk-compute
-    working_dir: /workspace
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-sk-db}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-sk-db}
-      POSTGRES_HOST: ${POSTGRES_HOST:-sk-db}
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+    working_dir: /usr/src/
+    env_file:
+      - .env
     depends_on:
-      - strapi
+      - api
     volumes:
-      - ./compute:/workspace
+      - ./compute:/usr/src/
     command: sleep infinity
     networks:
       - sk-net
 
-  strapi: # REST API
-    image: "node:lts-alpine"
-    container_name: sk-strapi
-    working_dir: /home/node/
-    user: "node"
+  api: # REST API
+    image: "python:3.12-bookworm"
+    container_name: sk-api
+    working_dir: /usr/src/
+    env_file:
+      - .env
     ports:
-      - "${STRAPI_PORT:-1337}:${STRAPI_PORT:-1337}"
-    environment:
-      HOST: ${STRAPI_HOST:-sk-strapi}
-      PORT: ${STRAPI_PORT:-1337}
-      DATABASE_CLIENT: postgres
-      DATABASE_HOST: ${POSTGRES_HOST:-develop}
-      DATABASE_PORT: ${POSTGRES_PORT:-5432}
-      DATABASE_NAME: ${POSTGRES_DB:-sk-db}
-      DATABASE_USERNAME: ${POSTGRES_USER:-sk-db}
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      DATABASE_SSL: ${DATABASE_SSL:-false}
-      DATABASE_FILENAME: ${DATABASE_FILENAME:-}
-      APP_KEYS: ${APP_KEYS:-}
-      API_TOKEN_SALT: ${API_TOKEN_SALT:-}
-      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-}
-      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-}
-    command: sleep infinity
+      - "8000:8000"
+    entrypoint: "/usr/src/entry-point.sh"
     restart: on-failure
     depends_on:
       - db
     volumes:
-      - ./backend/:/home/node
+      - ./backend/:/usr/src/
     networks:
       - sk-net
 
@@ -73,11 +51,8 @@ services:
     user: "node"
     ports:
       - ${VITE_PORT:-3000}:${VITE_PORT:-3000}
-    environment:
-      VITE_HOST: ${VITE_HOST:-sk-web}
-      VITE_PORT: ${VITE_PORT:-3000}
     depends_on:
-      - strapi
+      - api
     command: sleep infinity
     volumes:
       - ./frontend/:/home/node

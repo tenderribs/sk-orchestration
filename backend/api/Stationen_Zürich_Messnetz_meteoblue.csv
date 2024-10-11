@@ -1,0 +1,155 @@
+locationID,sensor,stationID,yCH1903+,xCH1903+,latDecimal,lonDecimal,masl,streetName,poleNumber,distance_to_building_m,shade,LCZ,installationDate,functionCheck,notes
+A7,LoRain,034000F1,2677937.0,1250077.0,47.3969,8.47102,396,Vulkanstrasse/Juchhof 1,,55,,D(E/8),2019-06-20 14:00:00,ok,keine ewz Laterne…
+A7,LoRain,0340AA49,2677937.0,1250077.0,47.3969,8.47102,396,Vulkanstrasse/Juchhof 1,,55,,D(E/8),2020-09-25 10:00:00,ok,"keine ewz Laterne…, Sommer 2022 zerstört (nicht ersetzt)"
+A7,Barani,2212LH032,2677937.0,1250077.0,47.3969,8.47102,396,Vulkanstrasse/Juchhof 1,,55,,D(E/8),2023-03-14 11:30:00,ok,Barani neu montiert
+A10,LoRain,034000D4,2678150.0,1248450.0,47.38224,8.47355,454,Friedhofstrasse,,5,,9,2019-06-20 14:50:00,ok,Übertragungsprobleme ab 2021
+A10,LoRain,0340D1ED,2678150.0,1248450.0,47.38224,8.47355,454,Friedhofstrasse,,5,,9,2021-08-25 16:00:00,ok,immer noch Übertragungsproblem…
+A10,Barani,2212LH038,2678150.0,1248450.0,47.38224,8.47355,454,Friedhofstrasse,,5,,9,2023-03-14 10:30:00,ok,LoRain ersetzt durch Barani
+B3,LoRain,0340012F,2678244.0,1252038.0,47.4145,8.47543,489,Hurdäckerstrasse,5,0,,6,2019-06-20 11:15:00,ok,
+B3,LoRain,034000F2,2678244.0,1252038.0,47.4145,8.47543,489,Hurdäckerstrasse,5,0,,6,2020-06-22 08:00:00,ok,
+B6,LoRain,034000E3,2678392.0,1250579.0,47.40136,8.47713,396,Paul-Pflüger-Strasse,8,20,,9(8),2019-06-20 13:45:00,ok,
+B9,LoRain,0340012A,2678611.0,1249077.0,47.38783,8.47977,409,Stampfenbrunnenstrasse,3,5,,5,2019-06-20 14:35:00,ok,"Reset, geputzt, jedoch Kommunikationsfehler, entfernt und ersetzt am 31.01.2024  mit Barani 2401LH039"
+B9,Barani,2401LH039,2678611.0,1249077.0,47.38783,8.47977,409,Stampfenbrunnenstrasse,3,5,,5,2024-01-31 15:45:00,ok,
+B12,LoRain,034000E1,2678750.0,1247612.0,47.37464,8.48135,451,Im Schaber,2,10,,6,2019-06-20 15:55:00,ok,
+C5,LoRain,034000EE,2678868.0,1251141.0,47.40636,8.48354,451,Imbisbühlstrasse,41,15,,5,2019-06-20 11:55:00,ok,
+C8,LoRain,03400125,2679002.0,1249649.0,47.39293,8.48505,397,Vulkanstrasse,57,30,,1(E/2),2019-06-20 14:15:00,ok,Seit 15. Juli verschwunden (neue Strassenlaterne)
+C8,Barani,2212LH039,2679002.0,1249649.0,47.39293,8.48505,397,Vulkanstrasse,57,30,,1(E/2),2023-03-14 11:00:00,ok,Barani neu montiert
+C11,LoRain,034000F4,2679186.0,1248193.0,47.37981,8.48723,412,Freilagerweg,1,15,,5,2019-06-20 15:40:00,ok,
+C14,LoRain,034000FA,2679355.0,1246759.0,47.36689,8.48921,495,Sädlenweg,6,15,Laterne,6(A),2019-06-21 09:35:00,ok,"Verschiebung um 80m nach Norden, nachträgliche Verschiebung von Mast 7 an Mast 6 auf Wunsch von Anwohner (25.07.19)"
+C14,Barani,2211LH022,2679355.0,1246759.0,47.36689,8.48921,495,Sädlenweg,6,15,Laterne,6(A),2023-03-13 18:05:00,ok,"Verschiebung um 80m nach Norden, nachträgliche Verschiebung von Mast 7 an Mast 6 auf Wunsch von Anwohner (25.07.19), LoRain Ersetzt durch Barani"
+D4,LoRain,034000E8,2679197.0,1251582.0,47.41029,8.48797,514,Heizenholz,4,5,,6(9/A),2019-06-20 11:35:00,ok,"Verschiebung um 60m nach Süden, ersetzt am 22.08.2024 mit LoRain 0300103 wegen Kommunikationsproblemen"
+D4,LoRain,03400103,2679197.0,1251582.0,47.41029,8.48797,514,Heizenholz,4,5,,6(9/A),2024-08-22 09:50:00,ok,
+D7,LoRain,034000F8,2679617.0,1250308.0,47.39878,8.49331,399,Fischerweg,2,5,Laterne,5(G),2019-06-20 13:25:00,ok,Verschiebung um 180m nach Osten
+D7,LoRain,0340AA46,2679617.0,1250308.0,47.39878,8.49331,399,Fischerweg,2,5,Laterne,5(G),2020-09-25 10:25:00,ok,"Verschiebung um 180m nach Osten, entfernt und ersetzt am 31.01.2024 mit Barani 2401LH044"
+D7,Barani,2401LH044,2679617.0,1250308.0,47.39878,8.49331,399,Fischerweg,2,5,Laterne,5(G),2024-01-31 13:35:00,ok,
+D10,LoRain,034000DD,2679620.0,1248709.0,47.3844,8.49306,405,Buckhauserstrasse,,5,,2,2019-06-20 15:20:00,ok,"Baustelle nebenan neuer Block (14.03.2023), am 29.11.2023 beschädigt vorgefunden und deshalb entfernt."
+D10,Barani,2212LH024,2679620.0,1248709.0,47.3844,8.49306,405,Buckhauserstrasse,,5,,2,2023-11-29 15:20:00,ok,Baustelle nebenan neuer Block (29.11.2023)
+D13,LoRain,03400115,2679691.0,1247299.0,47.37171,8.49375,427,Letzigraben,50,8,,5,2019-06-21 09:15:00,ok,Veschiebung um 150m nach (Süd-) Westen
+D16,LoRain,034000F5,2679961.0,1245791.0,47.35811,8.49706,555,Rebeggstrasse,75,5,,9(A),2019-06-21 09:50:00,ok,Station 0D5 mit 0F5 ersezt
+E6,LoRain,034000D8,2679872.0,1250712.0,47.40238,8.49676,458,Limmattalstrasse/Zwielplatz,13,5,,5,2019-06-20 13:10:00,ok,
+E9,LoRain,034000D6,2679932.0,1249160.0,47.38842,8.49728,400,Hohlstrasse,117,15,,2,2019-06-20 15:10:00,ok,"Verschiebung um 80m nach Südwesten, Baustelle neben an neue Blöcke (14.03.2023)"
+E12,LoRain,03400111,2680204.0,1247756.0,47.37576,8.50063,414,Gutstrasse,49,25,,5(9),2019-06-21 09:00:00,ok,
+E15,LoRain,0340011B,2680446.0,1246304.0,47.36267,8.50357,469,Grünmattstrasse,3,15,,5,2019-06-21 10:05:00,ok,
+F2,LoRain,034000CD,2680219.0,1252771.0,47.42086,8.50172,461,Furtalstrasse,4,15,,5,2019-06-20 10:15:00,ok,"Kommunikationsprobleme, entfernt und ersetzt am 10.05.2024 mit Barani 2212LH033"
+F2,Barani,2212LH033,268019381.0,125276801.0,47.420849,8.501397,461,Furtalstrasse,5,10,,5,2024-08-22 09:30:00,ok,Verschiebung um 25m SW an Nächste Laterne wegen Baustelle/defekte Laterne
+F5,LoRain,034000EF,2680347.0,1251369.0,47.40823,8.50317,517,Albert-Einstein-Strasse,,70,,9(E/5),2019-06-20 12:55:00,ok,Verschiebung um 90m nach Norden
+F5,Barani,2212LH036,2680347.0,1251369.0,47.40823,8.50317,517,Albert-Einstein-Strasse,,70,,9(E/5),2023-03-15 09:00:00,ok,LoRain durch Barani ersetzt
+F8,LoRain,034000E5,2680488.0,1249789.0,47.394,8.50475,401,Hardturmstrasse,50,30,,E(5),2019-06-21 07:50:00,ok,
+F8,LoRain,0340AA45,2680488.0,1249789.0,47.394,8.50475,401,Hardturmstrasse,50,30,,E(5),2020-09-25 10:21:00,ok,
+F8,Barani,2211LH035,2680488.0,1249789.0,47.394,8.50475,401,Hardturmstrasse,50,30,,E(5),2023-03-15 10:00:00,ok,LoRain durch Barani ersetzt
+F11,LoRain,03400117,2680680.0,1248386.0,47.38136,8.50704,409,Bienenstrasse,4,<5,,8(5),2019-06-21 08:45:00,ok,Station 12E wurde mit 117 ersetzt
+F14,LoRain,034000D2,2680840.0,1246855.0,47.36757,8.50888,429,Döltschiweg,13,10,Bäume,5,2019-06-21 10:20:00,ok,
+F17,LoRain,034000E6,2681019.0,1245257.0,47.35318,8.51096,480,Uetlibergstrasse,64,20,,5,2019-07-02 10:00:00,ok,
+F17,LoRain,0340AA4C,2681019.0,1245257.0,47.35318,8.51096,480,Uetlibergstrasse,64,20,,5,2021-02-03 18:02:00,ok,
+F17,Barani,2211LH032,2681019.0,1245257.0,47.35318,8.51096,480,Uetlibergstrasse,64,20,,5,2023-03-13 16:00:00,ok,LoRain ersetzt durch Barani
+G1,LoRain,034000DF,2680643.0,1253351.0,47.42602,8.50745,445,Horensteinstrasse,6,15,,6,2019-06-20 10:00:00,ok,Verschiebung um 60m nach Osten
+G1,LoRain,0340AA47,2680643.0,1253351.0,47.42602,8.50745,445,Horensteinstrasse,6,15,,6,2020-09-25 08:37:00,ok,Verschiebung um 60m nach Osten
+G1,Barani,2212LH030,2680643.0,1253351.0,47.42602,8.50745,445,Horensteinstrasse,6,15,,6,2023-03-17 09:45:00,ok,LoRain ersetzt durch Barani
+G4,LoRain,03400128,2680751.0,1251863.0,47.41262,8.50861,503,Lerchenberg,,30,,5,2019-06-20 10:40:00,ok,Langer Winkel (sehr instabil)
+G7,LoRain,03400130,2680869.0,1250349.0,47.39899,8.5099,509,Appenzellerstrasse,1,20,,5,2019-06-21 13:15:00,ok,
+G10,LoRain,0340010D,2681172.0,1248952.0,47.38639,8.51366,404,Gleisbogen,51,25,,4(5/E),2019-06-21 08:25:00,ok,
+G13,LoRain,034000D3,2681353.0,1247311.0,47.37161,8.51576,416,Ämtlerstrasse/Kalkbreitestrasse,23,15,,2,2019-06-21 10:35:00,ok,"Verschiebung um 95m nach Südosten, Reboot am 14.05.2024, ersetzt mit Lorain 034000CD am 22.08.2024"
+G13,LoRain,034000CD,2681353.0,1247311.0,47.37161,8.51576,416,Ämtlerstrasse/Kalkbreitestrasse,23,15,,2,2024-08-22 10:45:00,ok,
+G16,LoRain,03400114,2681432.0,1245912.0,47.35902,8.51655,435,Uetlibergstrasse/Giesshübelstrasse,26,25,,5,2019-07-02 10:20:00,ok,
+H3,LoRain,034000CF,2681262.0,1252435.0,47.41771,8.51548,457,Fronwaldstrasse,13,40,,9,2019-06-20 09:25:00,ok,
+H3,LoRain,0340AA4D,2681262.0,1252435.0,47.41771,8.51548,457,Fronwaldstrasse,13,40,,9,2021-02-09 15:17:00,ok,
+H3,Barani,2212LH027,2681262.0,1252435.0,47.41771,8.51548,457,Fronwaldstrasse,13,40,,9,2023-03-17 10:15:00,ok,"LoRain ersetzt durch Barani, neuer Platz mit Biotop gemäss Bilder"
+H3,Barani,2212LH025,2681262.0,1252435.0,47.41771,8.51548,457,Fronwaldstrasse,13,40,,9,2023-04-24 17:00:00,ok,"Barani ersetzt, da reboot nicht funktioniert hat"
+H9,LoRain,03400121,2681471.0,1249344.0,47.38988,8.51769,403,Turbinenplatz,110,15,,8(2),2019-06-21 08:15:00,ok,Verschiebung um 90m nach Südwesten
+H12,LoRain,034000FF,2681787.0,1248015.0,47.37789,8.52163,409,Stauffacherstrasse,42,5,,2,2019-06-21 10:50:00,ok,Verschiebung um 90 m nach Nord(-osten)
+H12,LoRain,0340D1F0,2681787.0,1248015.0,47.37789,8.52163,409,Stauffacherstrasse,42,5,,2,2021-11-18 10:30:00,ok,"Verschiebung um 90 m nach Nord(-osten), entfernt und ersetzt am 31.01.2024 mit Barani 2401LH048"
+H12,Barani,2401LH048,2681787.0,1248015.0,47.37789,8.52163,409,Stauffacherstrasse,42,5,,2,2024-01-31 12:05:00,ok,
+H15,LoRain,03400102,2681874.0,1246425.0,47.36358,8.52249,418,Giesshubelbrücke,29,10,,6(E),2019-07-02 10:50:00,ok,
+H18,LoRain,0340010E,2682113.0,1244980.0,47.35055,8.52539,423,Allmendstrasse,77,60,,E(9),2019-07-29 09:50:00,ok,
+H21,LoRain,03400113,2682256.0,1243451.0,47.33679,8.527,455,Balberstrasse,17,10,,5,2019-07-02 13:45:00,ok,
+H21,Barani,2212LH040,2682256.0,1243451.0,47.33679,8.527,455,Balberstrasse,17,10,,5,2023-03-13 18:00:00,ok,LoRain ersetz durch Barani
+I5,LoRain,0340010F,2681819.0,1251505.0,47.40927,8.52269,495,Waldstrasse,6,20,,6(A),2019-06-19 15:05:00,,
+I8_Zürich-Rosengartenstrasse,LoRain,03400107,2682085.0,1249922.0,47.395,8.52592,431,Rosengartenstrasse,"11,2",5,,2,2019-06-21 12:55:00,,"Kommunikationsprobleme, am 22.08.2024 entfernt und mit Barani 2401LH043 ersetzt"
+I8_Zürich-Rosengartenstrasse,Barani,2401LH043,2682085.0,1249922.0,47.395,8.52592,431,Rosengartenstrasse,"11,2",5,,2,2024-08-22 10:15:00,ok,
+I11,LoRain,03400129,2682276.0,1248527.0,47.38243,8.5282,409,Röntgenstrasse,,15,,2(E ),2019-06-21 11:10:00,,"Verschiebung um 100m nach Osten, Wiederholter Vandalismus -> am 28.06.2022 entfernt"
+I11,LoRain,03400129,2682263.0,1248554.0,47.38268,8.52803,409,Röntgenstrasse,,15,,2(E ),2022-11-29 10:00:00,,Mit Ersatzteilen aus anderen Stationen wiederhergerichtet und einen Masten weiter (30m nordwestlich) wieder montiert
+I14,LoRain,03400120,2682344.0,1247025.0,47.36892,8.52882,413,Sihlhölzlistrasse,12,25,Laterne,2(G),2019-07-02 11:20:00,,
+I17,LoRain,034000EA,2682541.0,1245455.0,47.35477,8.53114,431,Bellariastrasse,2,20,,5,2019-07-02 11:55:00,,Am 24.04.2023 entfernt.
+I17,Barani,2212LH017,2682541.0,1245455.0,47.35477,8.53114,431,Bellariastrasse,2,20,,5,2023-04-24 14:00:00,,
+I20,LoRain,0340012C,2682649.0,1244063.0,47.34224,8.53231,444,Auf der Egg,19,10,Laterne,9(5),2019-07-02 13:15:00,,
+J4,LoRain,034000E2,2682264.0,1251997.0,47.41364,8.52868,445,Binzmühlestrasse,71,5,,6,2019-06-19 14:50:00,,
+J4,Barani,2211LH037,2682264.0,1251997.0,47.41364,8.52868,445,Binzmühlestrasse,71,5,,6,2023-03-17 11:15:00,,LoRain ersetzt durch Barani
+J7,LoRain,03400118,2682533.0,1250556.0,47.40065,8.53197,475,Käferholzstrasse,8,8,,5(A),2019-06-19 11:45:00,,
+J10,LoRain,034000FD,2682627.0,1249074.0,47.38731,8.53295,409,Kloster-Fahr-Weg,8,10,Laterne,5(6/G),2019-06-21 11:35:00,,
+J10,Barani,2212LH029,2682627.0,1249074.0,47.38731,8.53295,409,Kloster-Fahr-Weg,8,10,Laterne,5(6/G),2023-07-24 13:00:00,,
+J13,LoRain,034000D0,2682788.0,1247525.0,47.37336,8.53479,410,Löwenstrasse/Nüschelerstrasse,4,10,,2,2019-07-29 09:20:00,,
+J13,LoRain,0340D1EA,2682788.0,1247525.0,47.37336,8.53479,410,Löwenstrasse/Nüschelerstrasse,4,10,,2,2021-11-18 10:00:00,,
+J13,Barani,2212LH022,2682788.0,1247525.0,47.37336,8.53479,410,Löwenstrasse/Nüschelerstrasse,4,10,,2,2023-03-15 13:00:00,,LoRain durch Barani ersetzt
+J16,LoRain,03400116,2682976.0,1246084.0,47.36037,8.53701,406,Hafen Enge,,>100,,G,2019-07-29 10:15:00,,"""mit Kabelbinder an Fahnenmast montiert """
+J22,LoRain,034000E0,2683256.0,1243110.0,47.33359,8.54017,442,Kilchbergstrasse,57,15,,6,2019-07-02 14:00:00,,
+K3,LoRain,03400105,2682797.0,1252620.0,47.41918,8.53585,452,Himmeristrasse,6,15,,5,2019-06-19 14:40:00,,
+K3,Barani,2211LH021,2682797.0,1252620.0,47.41918,8.53585,452,Himmeristrasse,6,15,,5,2023-03-17 11:45:00,,LoRain ersetzt durch Barani
+K6,LoRain,03400101,2682941.0,1251140.0,47.40585,8.53749,456,Hofwiesenstrasse (Nord),,8,,5,2019-06-19 12:00:00,,"""Verschiebung um 80m nach Nordosten """
+K9,LoRain,034000DC,2683044.0,1249585.0,47.39185,8.53856,459,Hofwiesenstrasse (süd),17,20,,2,2019-06-21 11:50:00,,
+K10_Zürich-Stampfenbachstrasse,LoRain,03400109,2683144.0,1249055.0,47.387,8.53979,442,Stampfenbachstrasse,,5,,2,2019-07-29 14:25:00,,
+K12,LoRain,0340012D,2683208.0,1248119.0,47.37865,8.54046,408,Museumstrasse,,10,,2,2019-07-29 09:00:00,,"Kommunikationsprobleme, entfernt und ersetzt am 31.01.2024 mit Barani 2401LH042"
+K12,Barani,2401LH042,2683208.0,1248119.0,47.37865,8.54046,408,Museumstrasse,,10,,2,2024-01-31 11:30:00,ok,Montiert an gleicher Stelle wie LoRain 
+K15,LoRain,034000D1,2683340.0,1246675.0,47.36564,8.54194,406,Bootsanleger Bürkliplatz,25,>100,,G,2019-07-29 10:30:00,,
+L2,LoRain,034000CE,2683151.0,1253164.0,47.42402,8.54064,443,Seebacherstrasse,7,15,Laterne,5,2019-06-19 14:25:00,,
+L2,Barani,2212LH028,2683151.0,1253164.0,47.42402,8.54064,443,Seebacherstrasse,7,15,Laterne,5,2023-03-17 12:15:00,,
+L5,LoRain,034000EC,2683283.0,1251667.0,47.41055,8.54212,442,Hofwiesenstrasse (Bhf Oerlikon),,25,,E(1/2),2019-06-19 13:05:00,,Am 04.12.2019 verschwunden (Grossbaustelle)
+L5,LoRain,03400110,2683283.0,1251667.0,47.41055,8.54212,442,Hofwiesenstrasse (Bhf Oerlikon),,25,,E(1/2),2020-04-29 13:05:00,,40m südwestlich neu montiert.
+L8_AWEL-Irchelpark,LoRain,034000F3,2683531.0,1250190.0,47.39723,8.54512,489,Irchelpark,K27,25,,9,2019-06-21 12:25:00,,"""Verschiebung um 70m nach Nord(-westen) """
+L11,LoRain,034000FB,2683647.0,1248676.0,47.3836,8.54638,473,Stapferstrasse,7,10,,5(2),2019-07-29 14:15:00,,"Seit Anfang 2021 Batterieproblem, zudem Daten sehr suspekt (viel zu hoch)"
+L11,LoRain,0340D1FA,2683647.0,1248676.0,47.3836,8.54638,473,Stapferstrasse,7,10,,5(2),2021-08-25 14:30:00,,
+L11,Barani,2212LH027,2683647.0,1248676.0,47.3836,8.54638,473,Stapferstrasse,7,10,,5(2),2023-09-01 13:00:00,,
+L14,LoRain,0340010C,2683831.0,1247155.0,47.3699,8.54853,423,Rämistrasse,22,5,,2,2019-07-29 13:25:00,,Am 22.08.2024 mit Barani 2401LH038 ersetzt
+L14,Barani,2401LH038,2683831.0,1247155.0,47.3699,8.54853,423,Rämistrasse,22,5,,2,2024-08-22 11:30:00,,"Baustelle beim Kunsthaus, eingezäunt 22.08.2024"
+L17,LoRain,034000ED,2684041.0,1245679.0,47.3566,8.55103,409,Höschgasse,41,20,,5,2019-07-29 12:15:00,,
+M1,LoRain,034000D9,2683586.0,1253676.0,47.42857,8.54651,446,Eichrainstrasse,2,35,,9(5),2019-06-19 14:10:00,,"Wurde am 5.11.19 kurz nach dem Mittag entfernt, da der Mast aufgrund einer Baustelle entfernt wurde!"
+M1,LoRain,034000D9,2683577.0,1253739.0,47.42914682,8.546402605,446,Eichrainstrasse,5,10,,9(5),2020-02-14 16:10:00,,wieder montiert jedoch ca. 50m weiter nördlich an Eichstrasse
+M4,LoRain,03400122,2683751.0,1252206.0,47.41538,8.54842,434,Eisfeldstrasse,7,5,,5(6),2019-06-19 13:25:00,,
+M7,LoRain,034000E4,2683936.0,1250666.0,47.40146,8.55058,473,Viktoriastrasse,?09,10,,5(E )	,2019-06-19 11:25:00,,
+M10,LoRain,034000DE,2684047.0,1249217.0,47.38841,8.55178,561,Germaniastrasse,17,10,,6,2019-07-29 13:50:00,,
+M13,LoRain,03400106,2684185.0,1247735.0,47.37507,8.55332,455,Pestalozzistrasse,11,<5,,5,2019-07-29 14:45:00,,
+M16,LoRain,0340011C,2684422.0,1246251.0,47.36169,8.55618,427,Zollikerstrasse,8,<5,,6(5),2019-07-01 13:55:00,,
+N3,LoRain,034000F0,2684187.0,1252718.0,47.41988,8.55429,429,Grubenackerstrasse,23,10,,6(5),2019-06-19 13:45:00,,"""Verschiebung um 50m nach Südosten """
+N6,LoRain,034000DA,2684405.0,1251275.0,47.40688,8.55691,432,Funkwiesenstrasse,2,10,,6,2019-06-19 11:05:00,,"""Verschiebung an Masten ohne Abschattung (50m nach Nordosten) """
+N6,LoRain,0340AA48,2684405.0,1251275.0,47.40688,8.55691,432,Funkwiesenstrasse,2,10,,6,2020-09-25 07:44:00,,"""Verschiebung an Masten ohne Abschattung (50m nach Nordosten) """
+N12,LoRain,03400124,2684708.0,1248286.0,47.37996,8.56035,546,Mittelbergsteig,3,10,,5,2019-07-01 16:05:00,,
+N15,LoRain,03400123,2684837.0,1246806.0,47.36663,8.56178,450,Asylstrasse/Sonnenhaldenstrasse,,<5,,2(3),2019-07-01 14:15:00,,"""Verschiebung um 50m nach Nordwesten "", Seit Anfang 2021 Batterieproblem, zudem Daten sehr suspekt (viel zu hoch)"
+N15,LoRain,0340D1F6,2684837.0,1246806.0,47.36663,8.56178,450,Asylstrasse/Sonnenhaldenstrasse,,<5,,2(3),2021-08-25 13:00:00,,"""Verschiebung um 50m nach Nordwesten "", reboot am 15.03.2023"
+N15,Barani,2211LH026,2684837.0,1246806.0,47.36663,8.56178,450,Asylstrasse/Sonnenhaldenstrasse,,<5,,2(3),2023-03-16 12:00:00,,LoRain ersetzt durch Barani
+N18,LoRain,03400127,2685131.0,1245253.0,47.35263,8.56538,454,Südstrasse,15,15,,9,2019-07-01 12:30:00,,"""Verschiebung um 90m nach Südosten """
+O5,LoRain,034000F7,2684792.0,1251817.0,47.4117,8.56214,429,Unterfeldstrasse,9,10,,5,2019-06-19 10:50:00,,
+O5,LoRain,034000D5,2684792.0,1251817.0,47.4117,8.56214,429,Unterfeldstrasse,9,10,,5,2020-06-22 10:15:00,,
+O14,LoRain,03400103,2685360.0,1247295.0,47.37096,8.5688,529,Sonnenbergstrasse,35,5,,6,2019-07-01 14:40:00,,Am 15.03.2023 entfernt.
+O14,Barani,2211LH034,2685360.0,1247295.0,47.37096,8.5688,529,Sonnenbergstrasse,35,5,,6,2023-03-15 15:15:00,,"Strasse wurde zur Zeit der Montage saniert, Filtereinsatz konnte nicht entfernt werden darum LoRain durch Barani ausgetauscht "
+O17,LoRain,03400112,2685563.0,1245880.0,47.35821,8.57121,449,Forchstrasse,"78,3",20,,5(6),2019-07-01 12:05:00,,"Verschiebung um 90m nach Osten, Kommunikationsprobleme, entfernt am 14.05.2024 und ersetzt mit Barani 2401LH037"
+O17,Barani,2401LH037,2685563.0,1245880.0,47.35821,8.57121,449,Forchstrasse,"78,3",20,,5(6),2024-05-14 14:45:00,ok,
+P4,LoRain,0340010A,2685244.0,1252368.0,47.4166,8.56823,427,Opfikonstrasse,31,0,,9,2019-06-19 10:30:00,,
+P7,LoRain,0340012B,2685418.0,1250853.0,47.40295,8.57024,444,Hüttenkopfstrasse,4,5,,6(5),2019-06-19 10:00:00,,"Batterieprobleme, entfernt und ersetzt am 31.01.2024 mit Barani 2401LH040"
+P7,Barani,2401LH040,2685418.0,1250853.0,47.40295,8.57024,444,Hüttenkopfstrasse,4,5,,6(5),2024-01-31 15:00:00,,
+P13,LoRain,0340011F,2685812.0,1248008.0,47.37731,8.57492,600,Adlisbergstrasse,2,150,,A,2019-07-01 15:05:00,,"""Verschiebung um 150m nach Norden """
+P16,LoRain,03400126,2685829.0,1246490.0,47.36366,8.57485,498,Witikonerstrasse,,80,,A,2019-07-01 11:50:00,,
+P16,Barani,2211LH023,2685829.0,1246490.0,47.36366,8.57485,498,Witikonerstrasse,,80,,A,2023-03-16 11:15:00,,LoRain ersetzt durch Barani
+P19,LoRain,034000E9,2686055.0,1244931.0,47.34961,8.57754,486,Witellikerstrasse,17,10,,6,2019-07-01 10:00:00,,"Kommunikationsprobleme, ersetzt mit Barani 2401LH047"
+P19,Barani,2401LH047,2686055.0,1244931.0,47.34961,8.57754,486,Witellikerstrasse,17,10,,6,2024-08-22 12:00:00,,
+Q6,LoRain,034000F9,268589508.0,125146856.0,47.408441,8.876689,428,Luegislandstrasse,38,8,,5,2024-08-22 08:30:00,,Verschiebung um 60 m Nord/Ost an Luegislandstrasse
+Q18,LoRain,0340011D,2686570.0,1245486.0,47.35453,8.58447,551,Drusbergstrasse,28,20,,6(B),2019-07-01 10:20:00,,
+Q18,LoRain,0340AA4B,2686570.0,1245486.0,47.35453,8.58447,551,Drusbergstrasse,28,20,,6(B),2020-10-14 15:48:00,,
+Q18,Barani,2212LH034,2686570.0,1245486.0,47.35453,8.58447,551,Drusbergstrasse,28,20,,6(B),2023-03-16 10:30:00,,LoRain ersetzt durch Barani
+R8,LoRain,034000EB,2686451.0,1250455.0,47.39924,8.58385,451,Stettbachstrasse,35,15,,6,2019-06-19 09:35:00,,
+R17,LoRain,034000D7,2686977.0,1246030.0,47.35937,8.58996,602,Lehfrauenweg,3,5,,6(5),2019-07-01 10:40:00,,"""Privatstrasse, laut Anwohner auch Laterne Privat, aber OK "", Reboot 16.03.23"
+S7,LoRain,034000E7,2686886.0,1251059.0,47.40461,8.58973,428,Weibelackerweg,37,20,Hochspannungsleitung,5,2019-06-19 09:15:00,,
+S7,Barani,2212LH029,2686886.0,1251059.0,47.40461,8.58973,428,Weibelackerweg,37,20,Hochspannungsleitung,5,2023-03-17 16:30:00,,LoRain ersetzt durch Barani da beschädigt gemäss Bilder
+S7,Barani,2212LH023,2686886.0,1251059.0,47.40461,8.58973,428,Weibelackerweg,37,20,Hochspannungsleitung,5,2023-04-24 16:30:00,,"Barani ersetzt, da reboot nicht funktioniert hat"
+S16,LoRain,03400108,2687380.0,1246623.0,47.36465,8.59541,611,In der Looren,11,5,Laterne,,2019-07-01 11:00:00,,
+T18,LoRain,034000FC,2688029.0,1245620.0,47.35555,8.6038,632,Kienastenwiesweg,10,10,,5,2019-07-01 11:25:00,,
+Zürich-Affoltern,LoRain,03400119,2681472.0,1253542.0,47.42763,8.51846,443,Reckenholzstrasse,42,70,,9,2019-06-20 09:40:00,,"""40m von der MeteoSchwiez-Referenzstation entfernt """
+Zürich-Affoltern,LoRain,0340011E,2681472.0,1253542.0,47.42763,8.51846,443,Reckenholzstrasse,42,70,,9,2022-03-29 12:30:00,,"""40m von der MeteoSchwiez-Referenzstation entfernt """
+Zürich-Affoltern,LoRain,0340000DD,2681422.0,1253546.0,47.427654,8.517825,443,Reckenholzstrasse,,30,,9,2024-01-31 14:15:00,,bestehende LoRain 0340AA44 ersetzt wegen Temperaturfehler am 31.01.2024 mit LoRain 0340000DD
+Zürich-Affoltern,LoRain,0340012D,2681422.0,1253546.0,47.427654,8.517825,443,Reckenholzstrasse,,30,,9,2024-08-22 09:00:00,,bestehende LoRain0340000DD ersetzt wegen Temperaturfehler am22.08.2024 mit LoRain 0340012D
+Zürich-Fluntern,LoRain,034000DB,2685114.0,1248015.0,47.37747,8.56568,548,Ackermannstrasse,7,15,,5(6),2019-07-01 15:50:00,,"""40m von MeteoSchweiz-Referenzstation entfernt """
+Zürich-Kaserne,LoRain,034000F6,2682484.0,1248039.0,47.37802,8.53086,409,Militärstrasse,,10,,2,2019-07-29 11:50:00,,"""60m nordöstlich der offiziellen Messstation """
+Zürich-Schimmelstrasse,LoRain,0340011A,2681948.0,1247241.0,47.37091,8.52362,413,Gerhardstrasse/Schimmelstrasse,1,15,,2,2019-07-29 11:00:00,,
+Zürich-Wiedikon-Kollerwiese 1,Barani,2401LH049,2681649.0,1246976.0,47.3685,8.5196,414,Steinstrasse,,30,,2 (E),2024-01-31 09:00:00,ok,
+Zürich-Wiedikon-Kollerwiese 2,Barani,2212LH31,2681640.0,1246996.0,47.36871,8.51945,414,Steinstrasse,,25,,2 (E),2024-01-31 09:10:00,ok,
+Zürich-Heubeeribüel,LoRain,0340010B,2685235082.0,1248405793.0,47.38098,8.567222,604,Zürichbergstrasse/Susenbergstrasse,,50,,9D,,,"Kommunikationsprobleme, ersetzt mit Barani 2401LH041 am 14.05.2024"
+Zürich-Heubeeribüel,LoRain,0340010B,2685235082.0,1248405793.0,47.38098,8.567222,604,Zürichbergstrasse/Susenbergstrasse,,50,,9D,2024-05-14 15:15:00,,
+Zürich-Heubeeribüel,LoRain,0340AA44,2685235082.0,1248405793.0,47.38098,8.567222,604,Zürichbergstrasse/Susenbergstrasse,,50,,9D,2024-08-22 12:30:00,,Barani 2401LH041 ersetzt mit LoRain 0340AA44
