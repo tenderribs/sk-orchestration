@@ -14,9 +14,7 @@ class Site(models.Model):
     name = models.CharField(max_length=64, unique=True)
     wgs84_lat = models.DecimalField(max_digits=7, decimal_places=5)
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
-    masl = models.DecimalField(
-        max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)]
-    )
+    masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
     magl = models.DecimalField(
         max_digits=4,
         decimal_places=1,
@@ -31,6 +29,7 @@ class Site(models.Model):
 
 class DeviceModel(models.Model):
     name = models.CharField(primary_key=True, unique=True, max_length=100)
+    datasheet = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return self.name

@@ -189,8 +189,10 @@ class Command(BaseCommand):
 
             for street in df["streetName"].unique():
                 # Sort entries corresponding to same site ascendingly
-                entries = df[df["streetName"] == street].sort_values(
-                    "installationDate", ascending=True
+                entries = (
+                    df[df["streetName"] == street]
+                    .sort_values("installationDate", ascending=True)
+                    .fillna("")
                 )
 
                 # The most recent installation has no end datetime and is currently active:
