@@ -58,7 +58,7 @@ class Command(BaseCommand):
         res = out_tz.localize(res).strftime(out_fmt)
         return res
 
-    def handle_ugz_awel(self):
+    def import_ugz_awel(self):
         csv_df = pd.read_csv(f"{self.BASE_DIR}/meta_aktive_awel+ugz.csv", sep=";")
         csv_df = csv_df.dropna(
             subset=[
@@ -132,7 +132,7 @@ class Command(BaseCommand):
             # Create Installation
             create_installation(row, site, provider)
 
-    def handle_meteoblue_data(self):
+    def import_meteoblue_data(self):
         """
         Meteoblue has a really wacky CSV file with missing fields for their as well as an
         API endpoint with active stations.
@@ -140,9 +140,9 @@ class Command(BaseCommand):
         """
 
         # Group entries by site, dropping rows missing required information
-        csv_df = pd.read_csv(f"{self.BASE_DIR}/Stationen_Zürich_Messnetz_meteoblue.csv", sep=",")
-
-        csv_df = csv_df.dropna(
+        csv_df = pd.read_csv(
+            f"{self.BASE_DIR}/Stationen_Zürich_Messnetz_meteoblue.csv", sep=","
+        ).dropna(
             subset=[
                 "sensor",
                 "stationID",
@@ -154,73 +154,84 @@ class Command(BaseCommand):
             ]
         )
 
-        # Prepare device models.
-        # provider barani is sensor "Barani" in meteoblue's CSV column, pessl is listed as "LoRain"
-        # decentlab endpoint has same data as UGZ + AWEL's CSV file entries for DL Atmos-22 etc., so we ignore it
-        lorain, _ = DeviceModel.objects.get_or_create(name="LoRain")
-        barani, _ = DeviceModel.objects.get_or_create(name="Barani-Helix")
+        def import_static_data(df: pd.DataFrame):
+            # Prepare device models. provider barani is sensor "Barani" in meteoblue's CSV column, pessl is listed as "LoRain"
+            lorain, _ = DeviceModel.objects.get_or_create(name="LoRain")
+            barani, _ = DeviceModel.objects.get_or_create(name="Barani-Helix")
 
-        # Set up static fields
-        for index, row in csv_df.iterrows():
-            # Site
-            site, _ = Site.objects.update_or_create(
-                provider="MET",
-                name=row["streetName"],
-                defaults={
-                    "provider": "MET",
-                    "wgs84_lat": round(row["latDecimal"], 5),
-                    "wgs84_lon": round(row["lonDecimal"], 5),
-                    "masl": round(row["masl"], 1),
-                    "magl": None,
-                },
-            )
+            for index, row in df.iterrows():
+                # Site
+                site, _ = Site.objects.update_or_create(
+                    provider="MET",
+                    name=row["streetName"],
+                    defaults={
+                        "provider": "MET",
+                        "wgs84_lat": round(row["latDecimal"], 5),
+                        "wgs84_lon": round(row["lonDecimal"], 5),
+                        "masl": round(row["masl"], 1),
+                        "magl": None,
+                    },
+                )
 
-            # Logger
-            device_model = barani if row["sensor"] == "Barani" else lorain
-            logger, _ = Logger.objects.update_or_create(
-                sensor_id=row["stationID"],
-                sensor_serial=f"{device_model.name}_{row['stationID']}",
-                device_model=device_model,
-            )
+                # Logger
+                device_model = barani if row["sensor"] == "Barani" else lorain
+                logger, _ = Logger.objects.update_or_create(
+                    sensor_id=row["stationID"],
+                    sensor_serial=f"{device_model.name}_{row['stationID']}",
+                    device_model=device_model,
+                )
 
-        # Reconstruct installations dynamically by fixing each location and remembering visiting loggers
-        for street in csv_df["streetName"].unique():
-            # Sort entries corresponding to same site ascendingly
-            site_entries_df = csv_df[csv_df["streetName"] == street].sort_values(
-                "installationDate", ascending=True
-            )
+        def reconstruct_installations(df: pd.DataFrame):
+            """
+            Reconstruct installations history by visiting each location and checking the installed loggers
+            assume old end == new start in the installationDate column
+            """
 
-            # The most recent installation has no end datetime and is currently active:
-            most_recent = site_entries_df.iloc[-1]
-            Installation.objects.create(
-                technician="MET",
-                interval_s=600,
-                notes=most_recent["notes"],
-                start=self.format_datetime(most_recent["installationDate"], "%Y-%m-%d %H:%M:%S"),
-                end=None,
-                site=Site.objects.get(name=most_recent["streetName"]),
-                logger=Logger.objects.get(sensor_id=most_recent["stationID"]),
-            )
+            for street in df["streetName"].unique():
+                # Sort entries corresponding to same site ascendingly
+                entries = df[df["streetName"] == street].sort_values(
+                    "installationDate", ascending=True
+                )
 
-            # For all entries preceding the most recent entry, assume old end == new start ending in most recent installation
-            for index in range(site_entries_df.shape[0] - 1):  # iterate until most recent
-                curr_inst = site_entries_df.iloc[index]
-                next_inst = site_entries_df.iloc[index + 1]
-
-                start = self.format_datetime(curr_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
-                end = self.format_datetime(next_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
-
+                # The most recent installation has no end datetime and is currently active:
+                most_recent = entries.iloc[-1]
                 Installation.objects.create(
                     technician="MET",
                     interval_s=600,
-                    notes=site_entries_df.iloc[index]["notes"],
-                    start=start,
-                    end=end,
-                    site=Site.objects.get(name=curr_inst["streetName"]),
-                    logger=Logger.objects.get(sensor_id=curr_inst["stationID"]),
+                    notes=most_recent["notes"],
+                    start=self.format_datetime(
+                        most_recent["installationDate"], "%Y-%m-%d %H:%M:%S"
+                    ),
+                    end=None,
+                    site=Site.objects.get(name=most_recent["streetName"]),
+                    logger=Logger.objects.get(sensor_id=most_recent["stationID"]),
                 )
 
-    def handle_innet_data(self):
+                # For all entries preceding the most recent entry
+                for index in range(entries.shape[0] - 1):  # iterate until most recent
+                    curr_inst = entries.iloc[index]
+                    next_inst = entries.iloc[index + 1]
+
+                    start = self.format_datetime(curr_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
+                    end = self.format_datetime(next_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
+
+                    Installation.objects.create(
+                        technician="MET",
+                        interval_s=600,
+                        notes=entries.iloc[index]["notes"],
+                        start=start,
+                        end=end,
+                        site=Site.objects.get(name=curr_inst["streetName"]),
+                        logger=Logger.objects.get(sensor_id=curr_inst["stationID"]),
+                    )
+
+        # Set up base information
+        import_static_data(csv_df)
+
+        # And reference base info when reconstructing installation history
+        reconstruct_installations(csv_df)
+
+    def import_innet_data(self):
         """
         Import INNET data.
         There are so few INNET objects that it is easiest to register manually
@@ -292,11 +303,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **kwargs):
-        self.handle_ugz_awel()
+        self.import_ugz_awel()
         self.stdout.write(self.style.SUCCESS("UGZ / AWEL Data seeded"))
 
-        self.handle_innet_data()
+        self.import_innet_data()
         self.stdout.write(self.style.SUCCESS("INNET Data seeded"))
 
-        self.handle_meteoblue_data()
+        self.import_meteoblue_data()
         self.stdout.write(self.style.SUCCESS("Meteoblue Data seeded"))
