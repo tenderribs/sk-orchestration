@@ -88,7 +88,7 @@ K6,LoRain,03400101,2682941.0,1251140.0,47.40585,8.53749,456,Hofwiesenstrasse (No
 K9,LoRain,034000DC,2683044.0,1249585.0,47.39185,8.53856,459,Hofwiesenstrasse (süd),17,20,,2,2019-06-21 11:50:00,,
 K10_Zürich-Stampfenbachstrasse,LoRain,03400109,2683144.0,1249055.0,47.387,8.53979,442,Stampfenbachstrasse,,5,,2,2019-07-29 14:25:00,,
 K12,LoRain,0340012D,2683208.0,1248119.0,47.37865,8.54046,408,Museumstrasse,,10,,2,2019-07-29 09:00:00,,"Kommunikationsprobleme, entfernt und ersetzt am 31.01.2024 mit Barani 2401LH042"
-K12,Barani,2401LH042,2683208.0,1248119.0,47.37865,8.54046,408,Museumstrasse,,10,,2,2024-01-31 11:30:00,ok,Montiert an gleicher Stelle wie LoRain 
+K12,Barani,2401LH042,2683208.0,1248119.0,47.37865,8.54046,408,Museumstrasse,,10,,2,2024-01-31 11:30:00,ok,Montiert an gleicher Stelle wie LoRain
 K15,LoRain,034000D1,2683340.0,1246675.0,47.36564,8.54194,406,Bootsanleger Bürkliplatz,25,>100,,G,2019-07-29 10:30:00,,
 L2,LoRain,034000CE,2683151.0,1253164.0,47.42402,8.54064,443,Seebacherstrasse,7,15,Laterne,5,2019-06-19 14:25:00,,
 L2,Barani,2212LH028,2683151.0,1253164.0,47.42402,8.54064,443,Seebacherstrasse,7,15,Laterne,5,2023-03-17 12:15:00,,

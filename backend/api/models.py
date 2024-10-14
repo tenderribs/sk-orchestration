@@ -14,9 +14,15 @@ class Site(models.Model):
     name = models.CharField(max_length=64, unique=True)
     wgs84_lat = models.DecimalField(max_digits=7, decimal_places=5)
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
-    masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
+    masl = models.DecimalField(
+        max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)]
+    )
     magl = models.DecimalField(
-        max_digits=4, decimal_places=1, validators=[MinValueValidator(0.0)], null=True, default=None
+        max_digits=4,
+        decimal_places=1,
+        validators=[MinValueValidator(0.0)],
+        null=True,
+        default=None,
     )
 
     def __str__(self):

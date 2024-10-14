@@ -1,32 +1,15 @@
 import pandas as pd
 import pytz
+import os
+
 
 from pathlib import Path
 from datetime import datetime
+from requests import request
+
 
 from api.models import Site, DeviceModel, Installation, Logger
 from django.core.management.base import BaseCommand
-
-
-# from https://github.com/perron2/lv95/blob/d04c92d94310da1a63bb6d18f49d62c0d7bae35e/lib/lv95.dart#L148
-def lv95_to_wgs84(x: float, y: float):
-    x1 = (x - 1200000) / 1000000
-    x2 = x1 * x1
-    x3 = x2 * x1
-
-    y1 = (y - 2600000) / 1000000
-    y2 = y1 * y1
-    y3 = y2 * y1
-
-    lat = (
-        16.9023892 + 3.238272 * x1 - 0.270978 * y2 - 0.002528 * x2 - 0.0447 * y2 * x1 - 0.0140 * x3
-    )
-    lon = 2.6779094 + 4.728982 * y1 + 0.791484 * y1 * x1 + 0.1306 * y1 * x2 - 0.0436 * y3
-
-    lat = lat * 100 / 36
-    lon = lon * 100 / 36
-
-    return lat, lon
 
 
 class Command(BaseCommand):
@@ -34,18 +17,108 @@ class Command(BaseCommand):
 
     BASE_DIR = Path(__file__).resolve().parent
 
-    def handle_ugz_awel(self):
-        df = pd.read_csv(f"{self.BASE_DIR}/meta_aktive_awel+ugz.csv", sep=";")
+    def lv95_to_wgs84(self, x: float, y: float):
+        """
+        from https://github.com/perron2/lv95/blob/d04c92d94310da1a63bb6d18f49d62c0d7bae35e/lib/lv95.dart#L148
+        """
 
-        for index, row in df.iterrows():
+        x1 = (x - 1200000) / 1000000
+        x2 = x1 * x1
+        x3 = x2 * x1
+
+        y1 = (y - 2600000) / 1000000
+        y2 = y1 * y1
+        y3 = y2 * y1
+
+        lat = (
+            16.9023892
+            + 3.238272 * x1
+            - 0.270978 * y2
+            - 0.002528 * x2
+            - 0.0447 * y2 * x1
+            - 0.0140 * x3
+        )
+        lon = 2.6779094 + 4.728982 * y1 + 0.791484 * y1 * x1 + 0.1306 * y1 * x2 - 0.0436 * y3
+
+        lat = lat * 100 / 36
+        lon = lon * 100 / 36
+
+        return lat, lon
+
+    def format_datetime(self, datestring: str, in_fmt: str) -> str:
+        """
+        Explicitly localize the datestring as DST aware CEST datetime. Django DB layer saves
+        it in UTC and exposes values as CEST.
+        """
+
+        out_tz = pytz.timezone("Europe/Zurich")
+        out_fmt = "%Y-%m-%d %H:%M:%S %z"
+
+        res = datetime.strptime(datestring, in_fmt)
+        res = out_tz.localize(res).strftime(out_fmt)
+        return res
+
+    def handle_ugz_awel(self):
+        csv_df = pd.read_csv(f"{self.BASE_DIR}/meta_aktive_awel+ugz.csv", sep=";")
+        csv_df = csv_df.dropna(
+            subset=[
+                "Sensortyp",
+                "SensorID",
+                "SensorSerial",
+                "Name",
+                "StartDatum",
+            ]
+        )
+
+        def create_site(row: pd.DataFrame):
+            """create Site and overwrite duplicates"""
+            provider = "AWE" if "(AWEL)" in row["Name"] else "UGZ"
+            lat, lon = self.lv95_to_wgs84(float(row["N"]), float(row["E"]))
+            site, _ = Site.objects.update_or_create(
+                provider=provider,
+                name=row["Name"],
+                defaults={
+                    "provider": provider,
+                    "wgs84_lat": round(lat, 5),
+                    "wgs84_lon": round(lon, 5),
+                    "masl": round(float(row["masl"]), 1),
+                    "magl": round(float(row["magl"]), 1) if "#" not in row["magl"] else None,
+                },
+            )
+
+            return site, provider
+
+        def create_installation(row: pd.DataFrame, site, provider):
+            """create Installation https://docs.djangoproject.com/en/5.1/topics/i18n/timezones/#overview"""
+
+            # localize start date
+            start = self.format_datetime(row["StartDatum"], "%d.%m.%Y %H:%M:%S")
+
+            # localize end date if available
+            if "#" not in row["EndDatum"]:
+                end = self.format_datetime(row["EndDatum"], "%d.%m.%Y %H:%M:%S")
+            else:
+                end = None
+
+            Installation.objects.create(
+                technician=provider,
+                start=start,
+                end=end,
+                site=site,
+                logger=logger,
+                interval_s=600,
+            )
+
+        # Iterate over the CSV file rows
+        for index, row in csv_df.iterrows():
             # clean the sensor type's whitespace
             name = str(row["Sensortyp"]).replace(" ", "-")
 
-            # create the Device Model based on listed types, overwriting duplicates
-            dev_model, status = DeviceModel.objects.update_or_create(name=name)
+            # Create the Device Model
+            dev_model, _ = DeviceModel.objects.update_or_create(name=name)
 
-            # create Loggers with listed ID and Serial data, overwriting duplicates
-            logger, status = Logger.objects.update_or_create(
+            # Create Loggers
+            logger, _ = Logger.objects.update_or_create(
                 sensor_id=row["SensorID"],
                 defaults={
                     "sensor_serial": row["SensorSerial"],
@@ -53,54 +126,44 @@ class Command(BaseCommand):
                 },
             )
 
-            # create Site and overwrite duplicates
-            provider = "AWE" if "(AWEL)" in row["Name"] else "UGZ"
-            lat, lon = lv95_to_wgs84(row["N"], row["E"])
-            site, status = Site.objects.update_or_create(
-                provider=provider,
-                name=row["Name"],
-                defaults={
-                    "provider": provider,
-                    "wgs84_lat": round(lat, 5),
-                    "wgs84_lon": round(lon, 5),
-                    "masl": round(row["masl"], 1),
-                },
-            )
+            # Create Site
+            site, provider = create_site(row)
 
-            # create Installation
-            # https://docs.djangoproject.com/en/5.1/topics/i18n/timezones/#overview
-            tz = pytz.timezone("Europe/Zurich")
-            in_fmt = "%d.%m.%Y %H:%M:%S"
-            out_fmt = "%Y-%m-%d %H:%M:%S %z"
+            # Create Installation
+            create_installation(row, site, provider)
 
-            # localize start date
-            start = datetime.strptime(row["StartDatum"], in_fmt)
-            start = tz.localize(start).strftime(out_fmt)
-
-            # localize end date if available
-            if "#" not in row["EndDatum"]:
-                end = datetime.strptime(row["EndDatum"], in_fmt)
-                end = tz.localize(end).strftime(out_fmt)
-            else:
-                end = None
-
-            Installation.objects.create(
-                technician=provider, start=start, end=end, site=site, logger=logger
-            )
-
-    # Currently Meteoblue isn't supported because it has a really wacky CSV file with missing fields
     def handle_meteoblue_data(self):
-        df = pd.read_csv(f"{self.BASE_DIR}/Stationen_Zürich_Messnetz_meteoblue.csv", sep=",")
+        """
+        Meteoblue has a really wacky CSV file with missing fields for their as well as an
+        API endpoint with active stations.
+        https://measurements-api.meteoblue.com/v2/baraniCityClimateZurich/station/get
+        """
 
-        # Save all the stations that are supposedly doing ok
-        for index, row in df[df["functionCheck"] == "ok"].iterrows():
-            device_model, status = DeviceModel.objects.update_or_create(name=row["sensor"])
+        # Group entries by site, dropping rows missing required information
+        csv_df = pd.read_csv(f"{self.BASE_DIR}/Stationen_Zürich_Messnetz_meteoblue.csv", sep=",")
 
-            logger, status = Logger.objects.update_or_create(
-                sensor_id=row["stationID"], sensor_serial=str(index), device_model=device_model
-            )
+        csv_df = csv_df.dropna(
+            subset=[
+                "sensor",
+                "stationID",
+                "latDecimal",
+                "lonDecimal",
+                "masl",
+                "streetName",
+                "installationDate",
+            ]
+        )
 
-            site, status = Site.objects.update_or_create(
+        # Prepare device models.
+        # provider barani is sensor "Barani" in meteoblue's CSV column, pessl is listed as "LoRain"
+        # decentlab endpoint has same data as UGZ + AWEL's CSV file entries for DL Atmos-22 etc., so we ignore it
+        lorain, _ = DeviceModel.objects.get_or_create(name="LoRain")
+        barani, _ = DeviceModel.objects.get_or_create(name="Barani-Helix")
+
+        # Set up static fields
+        for index, row in csv_df.iterrows():
+            # Site
+            site, _ = Site.objects.update_or_create(
                 provider="MET",
                 name=row["streetName"],
                 defaults={
@@ -108,10 +171,61 @@ class Command(BaseCommand):
                     "wgs84_lat": round(row["latDecimal"], 5),
                     "wgs84_lon": round(row["lonDecimal"], 5),
                     "masl": round(row["masl"], 1),
+                    "magl": None,
                 },
             )
 
+            # Logger
+            device_model = barani if row["sensor"] == "Barani" else lorain
+            logger, _ = Logger.objects.update_or_create(
+                sensor_id=row["stationID"],
+                sensor_serial=f"{device_model.name}_{row['stationID']}",
+                device_model=device_model,
+            )
+
+        # Reconstruct installations dynamically by fixing each location and remembering visiting loggers
+        for street in csv_df["streetName"].unique():
+            # Sort entries corresponding to same site ascendingly
+            site_entries_df = csv_df[csv_df["streetName"] == street].sort_values(
+                "installationDate", ascending=True
+            )
+
+            # The most recent installation has no end datetime and is currently active:
+            most_recent = site_entries_df.iloc[-1]
+            Installation.objects.create(
+                technician="MET",
+                interval_s=600,
+                notes=most_recent["notes"],
+                start=self.format_datetime(most_recent["installationDate"], "%Y-%m-%d %H:%M:%S"),
+                end=None,
+                site=Site.objects.get(name=most_recent["streetName"]),
+                logger=Logger.objects.get(sensor_id=most_recent["stationID"]),
+            )
+
+            # For all entries preceding the most recent entry, assume old end == new start ending in most recent installation
+            for index in range(site_entries_df.shape[0] - 1):  # iterate until most recent
+                curr_inst = site_entries_df.iloc[index]
+                next_inst = site_entries_df.iloc[index + 1]
+
+                start = self.format_datetime(curr_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
+                end = self.format_datetime(next_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
+
+                Installation.objects.create(
+                    technician="MET",
+                    interval_s=600,
+                    notes=site_entries_df.iloc[index]["notes"],
+                    start=start,
+                    end=end,
+                    site=Site.objects.get(name=curr_inst["streetName"]),
+                    logger=Logger.objects.get(sensor_id=curr_inst["stationID"]),
+                )
+
     def handle_innet_data(self):
+        """
+        Import INNET data.
+        There are so few INNET objects that it is easiest to register manually
+        """
+
         helix = DeviceModel.objects.get(name="Barani-Helix")
         blg = DeviceModel.objects.get(name="DL-BLG")
         atm22 = DeviceModel.objects.get(name="DL-Atmos-22")
@@ -136,7 +250,6 @@ class Command(BaseCommand):
             wgs84_lon=8.54310,
             masl=439,
         )
-
         vze_dach = Site.objects.create(
             provider="INN",
             name="VZE Dach Referenzstation",
@@ -149,6 +262,7 @@ class Command(BaseCommand):
             technician="INNET",
             start="2024-08-22 10:50:45 +02:00",
             end=None,
+            interval_s=600,
             site=vze_dach,
             logger=h766A,
         )
@@ -156,6 +270,7 @@ class Command(BaseCommand):
             technician="INNET",
             start="2024-08-22 10:51:46 +02:00",
             end=None,
+            interval_s=600,
             site=vze_dach,
             logger=b821E,
         )
@@ -163,6 +278,7 @@ class Command(BaseCommand):
             technician="INNET",
             start="2024-08-22 10:51:22 +02:00",
             end=None,
+            interval_s=600,
             site=vze_dach,
             logger=a3DD0,
         )
@@ -170,17 +286,17 @@ class Command(BaseCommand):
             technician="INNET",
             start="2024-09-23 17:04:06 +02:00",
             end=None,
+            interval_s=600,
             site=mel,
             logger=h86D6,
         )
 
     def handle(self, *args, **kwargs):
         self.handle_ugz_awel()
-        self.stdout.write(self.style.SUCCESS("UGZ / AWEL Data seeded successfully!"))
-
-        # example DETAIL:  Key (sensor_id)=(034000CD) already exists
-        # self.handle_meteoblue_data()
-        # self.stdout.write(self.style.SUCCESS("Meteoblue Data seeded successfully!"))
+        self.stdout.write(self.style.SUCCESS("UGZ / AWEL Data seeded"))
 
         self.handle_innet_data()
-        self.stdout.write(self.style.SUCCESS("INNET Data seeded successfully!"))
+        self.stdout.write(self.style.SUCCESS("INNET Data seeded"))
+
+        self.handle_meteoblue_data()
+        self.stdout.write(self.style.SUCCESS("Meteoblue Data seeded"))

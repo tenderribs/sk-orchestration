@@ -8,3 +8,4 @@ uritemplate
 pygments
 django-filter
 pandas
+requests
