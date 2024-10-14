@@ -15,6 +15,9 @@ class Site(models.Model):
     wgs84_lat = models.DecimalField(max_digits=7, decimal_places=5)
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
     masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
+    magl = models.DecimalField(
+        max_digits=4, decimal_places=1, validators=[MinValueValidator(0.0)], null=True, default=None
+    )
 
     def __str__(self):
         return f"{self.name} lat: {round(self.wgs84_lat, 2)} lon: {round(self.wgs84_lon, 2)} masl: {round(self.masl, 1)}"
@@ -22,7 +25,6 @@ class Site(models.Model):
 
 class DeviceModel(models.Model):
     name = models.CharField(primary_key=True, unique=True, max_length=100)
-    interval_s = models.IntegerField(default=600, validators=[MinValueValidator(0)])
 
     def __str__(self):
         return self.name
@@ -35,11 +37,13 @@ class Logger(models.Model):
     device_model = models.ForeignKey(DeviceModel, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.sensor_id
+        return f"{self.sensor_id} ({self.device_model}) serial: {self.sensor_serial} "
 
 
 class Installation(models.Model):
     technician = models.CharField(max_length=20)
+    interval_s = models.IntegerField(default=600, validators=[MinValueValidator(0)])
+    notes = models.CharField(max_length=512, default="")
     start = models.DateTimeField()
     end = models.DateTimeField(null=True)
 
