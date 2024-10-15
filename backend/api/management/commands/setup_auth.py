@@ -58,8 +58,8 @@ class Command(BaseCommand):
         conn_group = Group.objects.get(name="connectors")  # add to group for correct perms
         conn_user.groups.add(conn_group)
 
-        # Generate API token for the user
-        Token.objects.create(key=os.environ["CONN_TOKEN"], user=conn_user)
+        # # Generate API token for the user
+        # Token.objects.create(key=os.environ["CONN_TOKEN"], user=conn_user)
 
         # Create example user for use with Session auth
         if settings.DEBUG:
@@ -75,4 +75,4 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Created Groups"))
 
         self.setup_conn_user()
-        self.stdout.write(self.style.SUCCESS("Generated Connector User and Auth Token"))
+        self.stdout.write(self.style.SUCCESS("Generated Connector User (and Auth Token)"))
