@@ -1,9 +1,13 @@
 ## Get it Running
 
-Generate a `SECRET_KEY` for the `.env` file:
+Generate tokens and keys for the `.env` file:
 
 ```sh
-gpg --gen-random 2 70 | base64
+# Once for SECRET_KEY, CONN_PASSWORD
+gpg --gen-random 2 56 | base64
+
+# Once for CONN_TOKEN (max len is 40 chars)
+gpg --gen-random 2 30 | base64
 ```
 
 Get database set up:
