@@ -63,7 +63,7 @@ class Command(BaseCommand):
 
         # Create example user for use with Session auth
         if settings.DEBUG:
-            ugz_user = User.objects.create(username="ugz")
+            ugz_user = User.objects.create(username="ugz", is_staff=True)
             ugz_user.set_password("superlit")
             ugz_user.save()  # ensures password is hashed
 

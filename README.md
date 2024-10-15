@@ -29,6 +29,8 @@ Run the server
 python manage.py runserver 0.0.0.0:8000
 ```
 
+python manage.py flush && python manage.py setup_auth && python manage.py seed
+
 ## Migrations
 
 If you change the ORMS:
