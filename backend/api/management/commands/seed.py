@@ -1,15 +1,14 @@
 import pandas as pd
 import pytz
-import os
-
 
 from pathlib import Path
 from datetime import datetime
-from requests import request
 
+from django.core.management.base import BaseCommand
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 from api.models import Site, DeviceModel, Installation, Logger
-from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):

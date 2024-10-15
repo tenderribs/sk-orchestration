@@ -20,13 +20,13 @@ class LoggerSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
-class InstallationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Installation
-        fields = "__all__"
-
-
 class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Measurement
+        fields = "__all__"
+
+
+class InstallationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Installation
         fields = "__all__"
