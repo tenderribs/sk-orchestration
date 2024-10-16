@@ -1,13 +1,15 @@
 import json
 
 from rest_framework import viewsets
-from rest_framework.permissions import DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.views import APIView
 
-from django.http import JsonResponse
+
 from django.contrib.auth import authenticate, login, logout
-from django.views.decorators.http import require_POST
 from django.middleware.csrf import get_token
-
+from django.http import JsonResponse, HttpRequest
+from django.views.decorators.http import require_POST, require_GET
 
 from api.models import Site, DeviceModel, Logger, Installation, Measurement
 
@@ -68,20 +70,21 @@ class MeasurementViewSet(viewsets.ModelViewSet):
     serializer_class = MeasurementSerializer
 
 
-def get_csrf(request):
+# For initial login, a CSRF token is required
+@require_GET
+def get_csrf(request: HttpRequest):
     response = JsonResponse({"detail": "CSRF cookie set"})
     response["X-CSRFToken"] = get_token(request)
     return response
 
 
 @require_POST
-def login_view(request):
-    data = json.loads(request.body)
-    username = data.get("username")
-    password = data.get("password")
+def login_view(request: HttpRequest):
+    username = request.POST.get("username")
+    password = request.POST.get("password")
 
     if username is None or password is None:
-        return JsonResponse({"detail": "Please provide username and password."}, status=400)
+        return JsonResponse({"detail": "Please provide username and password."}, status=422)
 
     user = authenticate(username=username, password=password)
 
@@ -92,7 +95,7 @@ def login_view(request):
     return JsonResponse({"detail": "Successfully logged in."})
 
 
-def logout_view(request):
+def logout_view(request: HttpRequest):
     if not request.user.is_authenticated:
         return JsonResponse({"detail": "You're not logged in."}, status=400)
 

@@ -125,15 +125,21 @@ CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 CORS_ALLOW_CREDENTIALS = True
 
 if DEBUG:
+    # DEV ONLY
     CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
     CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
-
+else:
+    # PROD ONLY
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        # "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+    ],
 }
 
 # Internationalization

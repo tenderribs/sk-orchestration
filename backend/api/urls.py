@@ -15,7 +15,7 @@ router.register("measurements", views.MeasurementViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("csrf", views.get_csrf, name="api-csrf"),
-    path("login", views.login_view, name="api-login"),
-    path("logout", views.logout_view, name="api-logout"),
+    path("csrf/", views.get_csrf, name="api-csrf"),
+    path("login/", views.login_view, name="api-login"),
+    path("logout/", views.logout_view, name="api-logout"),
 ]
