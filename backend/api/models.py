@@ -60,7 +60,7 @@ class Installation(models.Model):
             raise ValidationError("Start time must be earlier than end time.")
 
     def __str__(self):
-        return f"site: {self.site} logger: {self.logger} start: {self.start} "
+        return f"{self.site.name} {self.logger.device_model.name} {self.start} "
 
 
 class Measurement(models.Model):

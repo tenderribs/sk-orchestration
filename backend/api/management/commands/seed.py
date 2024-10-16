@@ -1,19 +1,16 @@
 import pandas as pd
 import pytz
-import os
-
 
 from pathlib import Path
 from datetime import datetime
-from requests import request
 
+from django.core.management.base import BaseCommand
 
 from api.models import Site, DeviceModel, Installation, Logger
-from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Seed the database with data from a CSV file"
+    help = "Seed the database with data from CSV files"
 
     BASE_DIR = Path(__file__).resolve().parent
 
@@ -59,7 +56,7 @@ class Command(BaseCommand):
         return res
 
     def import_ugz_awel(self):
-        csv_df = pd.read_csv(f"{self.BASE_DIR}/meta_aktive_awel+ugz.csv", sep=";")
+        csv_df = pd.read_csv(f"{self.BASE_DIR}/csv/meta_aktive_awel+ugz.csv", sep=";")
         csv_df = csv_df.dropna(
             subset=[
                 "Sensortyp",
@@ -141,7 +138,7 @@ class Command(BaseCommand):
 
         # Group entries by site, dropping rows missing required information
         csv_df = pd.read_csv(
-            f"{self.BASE_DIR}/Stationen_Zürich_Messnetz_meteoblue.csv", sep=","
+            f"{self.BASE_DIR}/csv/Stationen_Zürich_Messnetz_meteoblue.csv", sep=","
         ).dropna(
             subset=[
                 "sensor",
@@ -306,10 +303,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.import_ugz_awel()
-        self.stdout.write(self.style.SUCCESS("UGZ / AWEL Data seeded"))
+        self.stdout.write(self.style.SUCCESS("UGZ / AWEL Data Seeded"))
 
         self.import_innet_data()
-        self.stdout.write(self.style.SUCCESS("INNET Data seeded"))
+        self.stdout.write(self.style.SUCCESS("INNET Data Seeded"))
 
         self.import_meteoblue_data()
-        self.stdout.write(self.style.SUCCESS("Meteoblue Data seeded"))
+        self.stdout.write(self.style.SUCCESS("Meteoblue Data Seeded"))

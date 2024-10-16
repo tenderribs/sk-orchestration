@@ -1,11 +1,11 @@
 django
+djangorestframework
+django-cors-headers
 psycopg[binary]
 python-dotenv
-djangorestframework
 markdown
 PyYAML
 uritemplate
 pygments
-django-filter
 pandas
 requests

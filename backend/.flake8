@@ -1,2 +1,7 @@
 [flake8]
 max-line-length = 100
+show-source=True
+statistics=True
+docstring-convention=google
+suppress-none-returning=True
+allow-star-arg-any=True
