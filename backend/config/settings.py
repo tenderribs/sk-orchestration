@@ -43,10 +43,12 @@ INSTALLED_APPS = [
     "api.apps.ApiConfig",
     "rest_framework",
     "rest_framework.authtoken",
+    "corsheaders",
 ]
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -110,11 +112,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/CSRF_prevention
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_HTTPONLY = False
+
+# https://docs.djangoproject.com/en/5.1/ref/settings/#session-cookie-samesite
+# https://docs.djangoproject.com/en/5.1/ref/settings/#session-cookie-httponly
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_HTTPONLY = True
+
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+CORS_ALLOW_CREDENTIALS = True
+
+if DEBUG:
+    # DEV ONLY
+    CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+    CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+else:
+    # PROD ONLY
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
 REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+    ],
 }
 
 # Internationalization

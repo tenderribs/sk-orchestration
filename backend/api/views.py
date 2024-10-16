@@ -1,6 +1,15 @@
-from rest_framework import viewsets
-from rest_framework.permissions import DjangoModelPermissions
+import json
 
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.views import APIView
+
+
+from django.contrib.auth import authenticate, login, logout
+from django.middleware.csrf import get_token
+from django.http import JsonResponse, HttpRequest
+from django.views.decorators.http import require_POST, require_GET
 
 from api.models import Site, DeviceModel, Logger, Installation, Measurement
 
@@ -27,7 +36,7 @@ class StricterDjangoModelPermissions(DjangoModelPermissions):
 
 
 class SiteViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [StricterDjangoModelPermissions]
 
     queryset = Site.objects.all()
     serializer_class = SiteSerializer
@@ -59,3 +68,36 @@ class MeasurementViewSet(viewsets.ModelViewSet):
 
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
+
+
+# For initial login, a CSRF token is required
+@require_GET
+def get_csrf(request: HttpRequest):
+    response = JsonResponse({"detail": "CSRF cookie set"})
+    response["X-CSRFToken"] = get_token(request)
+    return response
+
+
+@require_POST
+def login_view(request: HttpRequest):
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+
+    if username is None or password is None:
+        return JsonResponse({"detail": "Please provide username and password."}, status=422)
+
+    user = authenticate(username=username, password=password)
+
+    if user is None:
+        return JsonResponse({"detail": "Invalid credentials."}, status=400)
+
+    login(request, user)
+    return JsonResponse({"detail": "Successfully logged in."})
+
+
+def logout_view(request: HttpRequest):
+    if not request.user.is_authenticated:
+        return JsonResponse({"detail": "You're not logged in."}, status=400)
+
+    logout(request)
+    return JsonResponse({"detail": "Successfully logged out."})
