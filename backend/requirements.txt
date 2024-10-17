@@ -1,5 +1,5 @@
 # Django backend
-django
+django>=4.2,<4.3
 djangorestframework
 django-cors-headers
 PyYAML # Schema generation support

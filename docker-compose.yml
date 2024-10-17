@@ -1,35 +1,7 @@
 services:
-  connectors: # container for the API connectors
+  backend:
     image: "python:3.12-bookworm"
-    container_name: sk-connectors
-    working_dir: /usr/src/
-    env_file:
-      - .env
-    volumes:
-      - ./connectors:/usr/src/
-    command: sleep infinity
-    depends_on:
-      - api
-    networks:
-      - sk-net
-
-  compute: # for computations on data
-    image: "python:3.12-bookworm"
-    container_name: sk-compute
-    working_dir: /usr/src/
-    env_file:
-      - .env
-    depends_on:
-      - api
-    volumes:
-      - ./compute:/usr/src/
-    command: sleep infinity
-    networks:
-      - sk-net
-
-  api: # REST API
-    image: "python:3.12-bookworm"
-    container_name: sk-api
+    container_name: sk-backend
     working_dir: /usr/src/
     env_file:
       - .env
@@ -44,7 +16,7 @@ services:
     networks:
       - sk-net
 
-  web:
+  frontend:
     image: "node:22-alpine"
     container_name: sk-web
     working_dir: /home/node/
@@ -52,7 +24,7 @@ services:
     ports:
       - ${VITE_PORT:-3000}:${VITE_PORT:-3000}
     depends_on:
-      - api
+      - backend
     command: sleep infinity
     volumes:
       - ./frontend/:/home/node
