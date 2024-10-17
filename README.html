@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Stadtklima Project</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-dark">
+            <h1 id="stadtklima-project">Stadtklima Project</h1>
+<p>This repo features a frontend and backend to securely manage sensor data and installations from a web portal.</p>
+<p>The <code>/backend</code> folder contains:</p>
+<ul>
+<li><strong><a href="./backend/api"><code>/backend/api</code></a></strong>: A Django REST-API to share sensor data and metrics</li>
+<li><strong><a href="./backend/connectors"><code>/backend/connectors</code></a></strong>: Scripts to periodically import data from our sensor network</li>
+<li><strong><a href="./backend/compute"><code>/backend/compute</code></a></strong>: Scripts that process raw sensor data into useful metrics</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p>A lightweight dockerized environment is provided with the ability to bootstrap the entire application and run everything as intended. Either use this directly, or take a look at the <code>docker-compose.yml</code> file for a complete list of services needed for the execution environment of this product.</p>
+<p>Snapshot of key services:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Version</th>
+<th>EOL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://hub.docker.com/_/postgres">PostgreSQL</a></td>
+<td>17</td>
+<td>2029-11</td>
+</tr>
+<tr>
+<td><a href="https://hub.docker.com/_/python">Python</a></td>
+<td>3.12</td>
+<td>2028-10</td>
+</tr>
+<tr>
+<td><a href="https://hub.docker.com/_/node">Node</a></td>
+<td>22 LTS</td>
+<td>2027-04</td>
+</tr>
+<tr>
+<td><a href="https://www.djangoproject.com/download/">Django</a></td>
+<td>4.2 LTS</td>
+<td>2026-04</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configure-env-variables">Configure ENV variables</h3>
+<p>Secret keys and configurable variables for production and development contexts are set in a <code>.env</code> file outside of version control. Please copy the <code>.env.example</code> file and configure ALL missing fields.</p>
+<p>Generate tokens and keys for the <code>.env</code> file:</p>
+<pre><code class="language-sh"><span class="hljs-comment"># Once for SECRET_KEY, CONN_PASSWORD</span>
+gpg --gen-random 2 56 | <span class="hljs-built_in">base64</span>
+
+<span class="hljs-comment"># Once for CONN_TOKEN (max len is 40 chars)</span>
+gpg --gen-random 2 30 | <span class="hljs-built_in">base64</span>
+</code></pre>
+<h2 id="backend">Backend</h2>
+<h3 id="manual-setup">Manual Setup</h3>
+<pre><code class="language-sh"><span class="hljs-comment"># Run the migrations</span>
+python manage.py migrate
+
+<span class="hljs-comment"># Seed data</span>
+python manage.py flush &amp;&amp; python manage.py seed
+
+<span class="hljs-comment"># And create a superuser for the admin panel</span>
+python manage.py createsuperuser --username admin --email admin@example.com
+</code></pre>
+<p>Run the server</p>
+<pre><code class="language-sh">python manage.py runserver 0.0.0.0:8000
+</code></pre>
+<!-- python manage.py flush && python manage.py setup_auth && python manage.py seed -->
+<h3 id="migrations">Migrations</h3>
+<p>If you change the ORMS:</p>
+<pre><code class="language-sh"><span class="hljs-comment"># Generate new migration files</span>
+python manage.py makemigrations api
+
+<span class="hljs-comment"># Check the migration SQL output in plain text (dry run)</span>
+python manage.py sqlmigrate api 0001  <span class="hljs-comment"># change number</span>
+
+<span class="hljs-comment"># Run the migrations</span>
+python manage.py migrate
+</code></pre>
+
+            
+            
+        </body>
+        </html>

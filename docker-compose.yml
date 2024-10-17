@@ -45,7 +45,7 @@ services:
       - sk-net
 
   web:
-    image: "node:lts-alpine"
+    image: "node:22-alpine"
     container_name: sk-web
     working_dir: /home/node/
     user: "node"
@@ -62,7 +62,7 @@ services:
 
   db: # local storage
     container_name: sk-db
-    image: postgres:alpine
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-sk-db}
