@@ -10,11 +10,15 @@ class Site(models.Model):
         METEOBLUE = "MET", "Meteoblue"
         AWEL = "AWE", "Amt für Abfall, Wasser, Energie und Luft"
 
-    provider = models.CharField(max_length=3, choices=Providers.choices, default=Providers.UGZ)
+    provider = models.CharField(
+        max_length=3, choices=Providers.choices, default=Providers.UGZ
+    )
     name = models.CharField(max_length=64, unique=True)
     wgs84_lat = models.DecimalField(max_digits=7, decimal_places=5)
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
-    masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
+    masl = models.DecimalField(
+        max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)]
+    )
     magl = models.DecimalField(
         max_digits=4,
         decimal_places=1,

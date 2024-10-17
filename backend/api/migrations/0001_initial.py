@@ -160,11 +160,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="installation",
             name="logger",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.logger"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="api.logger"
+            ),
         ),
         migrations.AddField(
             model_name="installation",
             name="site",
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.site"),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="api.site"
+            ),
         ),
     ]
