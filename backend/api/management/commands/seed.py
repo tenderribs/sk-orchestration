@@ -35,13 +35,7 @@ class Command(BaseCommand):
             - 0.0447 * y2 * x1
             - 0.0140 * x3
         )
-        lon = (
-            2.6779094
-            + 4.728982 * y1
-            + 0.791484 * y1 * x1
-            + 0.1306 * y1 * x2
-            - 0.0436 * y3
-        )
+        lon = 2.6779094 + 4.728982 * y1 + 0.791484 * y1 * x1 + 0.1306 * y1 * x2 - 0.0436 * y3
 
         lat = lat * 100 / 36
         lon = lon * 100 / 36
@@ -85,9 +79,7 @@ class Command(BaseCommand):
                     "wgs84_lat": round(lat, 5),
                     "wgs84_lon": round(lon, 5),
                     "masl": round(float(row["masl"]), 1),
-                    "magl": (
-                        round(float(row["magl"]), 1) if "#" not in row["magl"] else None
-                    ),
+                    "magl": (round(float(row["magl"]), 1) if "#" not in row["magl"] else None),
                 },
             )
 
@@ -219,12 +211,8 @@ class Command(BaseCommand):
                     curr_inst = entries.iloc[index]
                     next_inst = entries.iloc[index + 1]
 
-                    start = self.format_datetime(
-                        curr_inst["installationDate"], "%Y-%m-%d %H:%M:%S"
-                    )
-                    end = self.format_datetime(
-                        next_inst["installationDate"], "%Y-%m-%d %H:%M:%S"
-                    )
+                    start = self.format_datetime(curr_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
+                    end = self.format_datetime(next_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
 
                     Installation.objects.create(
                         technician="MET",
