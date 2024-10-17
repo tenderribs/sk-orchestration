@@ -7,6 +7,21 @@ from api.models import Installation, Measurement
 from .TokenHelper import TokenHelper
 
 
+def fetch_auth_headers():
+    """Get header w/ authentication token"""
+
+    helper = TokenHelper(
+        f"https://id.{env['INNET_HOST']}",
+        env["INNET_CLIENT_NAME"],
+        env["INNET_CLIENT_SECRET"],
+    )
+
+    token, expires_at = helper.get_token()
+
+    # Assume script execution complete before INNET token expiry
+    return {"Authorization": "Bearer " + token}
+
+
 field_mapping = {
     "DL-BLG": [
         {"type": "bat_v", "field": "%SERIAL%.battery.V"},
@@ -56,21 +71,7 @@ def query_innet(headers: dict, deveui: str, field_name: str):
     return data["values"][0], data["timestamps"][0]
 
 
-def fetch_auth_headers():
-    # Get authentication token
-    helper = TokenHelper(
-        f"https://id.{env['INNET_HOST']}",
-        env["INNET_CLIENT_NAME"],
-        env["INNET_CLIENT_SECRET"],
-    )
-
-    token, expires_at = helper.get_token()
-
-    # Assume script execution complete before INNET token expiry
-    return {"Authorization": "Bearer " + token}
-
-
-def innet_main():
+def main():
     auth_headers = fetch_auth_headers()
 
     # Active INNET installations
@@ -107,5 +108,3 @@ def innet_main():
 
             except Exception as e:
                 print(f"Couldn't add {field_name}, ignoring ({e})")
-
-        # print("\n")
