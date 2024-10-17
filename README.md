@@ -4,9 +4,9 @@ This repo features a frontend and backend to securely manage sensor data and ins
 
 The `/backend` folder contains:
 
-- **[`/backend/api`](./backend/api)**: A Django REST-API to share sensor data and metrics
-- **[`/backend/connectors`](./backend/connectors)**: Scripts to periodically import data from our sensor network
-- **[`/backend/compute`](./backend/compute)**: Scripts that process raw sensor data into useful metrics
+- **[`api`](./backend/api)**: A Django REST-API to share sensor data and metrics
+- **[`connectors`](./backend/api/management/commands/connect.py)**: Scripts to periodically import data from our sensor network
+<!-- - **[`/backend/compute`](./backend/compute)**: Scripts that process raw sensor data into useful metrics -->
 
 ## Installation
 

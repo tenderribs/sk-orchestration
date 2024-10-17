@@ -10,15 +10,11 @@ class Site(models.Model):
         METEOBLUE = "MET", "Meteoblue"
         AWEL = "AWE", "Amt für Abfall, Wasser, Energie und Luft"
 
-    provider = models.CharField(
-        max_length=3, choices=Providers.choices, default=Providers.UGZ
-    )
+    provider = models.CharField(max_length=3, choices=Providers.choices, default=Providers.UGZ)
     name = models.CharField(max_length=64, unique=True)
     wgs84_lat = models.DecimalField(max_digits=7, decimal_places=5)
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
-    masl = models.DecimalField(
-        max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)]
-    )
+    masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
     magl = models.DecimalField(
         max_digits=4,
         decimal_places=1,
@@ -72,7 +68,7 @@ class Measurement(models.Model):
         WIND_SPEED_MS = "ws_ms", "wind speed, ms^-1"
         WIND_SPEED_MAX_MS = "ws_max_ms", "max wind , ms^-1"
         EAST_WIND_SPEED_MS = "e_ws_ms", "east wind speed, ms^-1"
-        NORTH_WIND_SPEED_MS = "n_ws_ms", "west wind speed, ms^-1"
+        NORTH_WIND_SPEED_MS = "n_ws_ms", "north wind speed, ms^-1"
         HUMIDITY_PCT = "h_pct", "humidity, percent"
         IRRADIATION_WM2 = "irr_wm2", "irradiation wm^-2"
         WIND_DIRECTION_DEG = "w_dir_deg", "wind direction, degrees"
