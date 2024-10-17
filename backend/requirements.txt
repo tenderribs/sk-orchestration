@@ -1,11 +1,16 @@
-django
+# Django backend
+django>=4.2,<4.3
 djangorestframework
 django-cors-headers
-psycopg[binary]
-python-dotenv
-markdown
-PyYAML
-uritemplate
-pygments
+PyYAML # Schema generation support
+uritemplate # Schema generation support
+psycopg[binary] # PostgreSQL python drivers
+
+# For CSV seeder
 pandas
+
+# For connectors
 requests
+
+# Code autoformat
+black

@@ -84,7 +84,9 @@ def login_view(request: HttpRequest):
     password = request.POST.get("password")
 
     if username is None or password is None:
-        return JsonResponse({"detail": "Please provide username and password."}, status=422)
+        return JsonResponse(
+            {"detail": "Please provide username and password."}, status=422
+        )
 
     user = authenticate(username=username, password=password)
 
