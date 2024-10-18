@@ -1,10 +1,7 @@
-import json
-
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.views import APIView
-
+from rest_framework.authentication import SessionAuthentication
 
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
@@ -84,9 +81,7 @@ def login_view(request: HttpRequest):
     password = request.POST.get("password")
 
     if username is None or password is None:
-        return JsonResponse(
-            {"detail": "Please provide username and password."}, status=422
-        )
+        return JsonResponse({"detail": "Please provide username and password."}, status=422)
 
     user = authenticate(username=username, password=password)
 
@@ -103,3 +98,10 @@ def logout_view(request: HttpRequest):
 
     logout(request)
     return JsonResponse({"detail": "Successfully logged out."})
+
+
+class CheckAuth(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request):
+        return JsonResponse({"detail": "You're Authenticated"})
