@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # https://developer.mozilla.org/en-US/docs/Web/Security/Practical_implementation_guides/CSRF_prevention
 CSRF_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False
 
 # https://docs.djangoproject.com/en/5.1/ref/settings/#session-cookie-samesite
 # https://docs.djangoproject.com/en/5.1/ref/settings/#session-cookie-httponly
