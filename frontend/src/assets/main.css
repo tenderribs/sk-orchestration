@@ -1,3 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url('../assets/fonts/HelveticaNeue-Light.otf');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url('../assets/fonts/HelveticaNeue-Roman.otf');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url('../assets/fonts/HelveticaNeue-Medium.otf');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "HelveticaNeueHeavy";
+    src: url('../assets/fonts/HelveticaNeue-Heavy.otf');
+    font-weight: 700;
+    font-style: normal;
+}
