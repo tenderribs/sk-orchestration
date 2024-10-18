@@ -89,7 +89,13 @@ def login_view(request: HttpRequest):
         return JsonResponse({"detail": "Invalid credentials."}, status=400)
 
     login(request, user)
-    return JsonResponse({"detail": "Successfully logged in."})
+    return JsonResponse(
+        {
+            "email": request.user.email,
+            "first_name": request.user.first_name,
+            "last_name": request.user.last_name,
+        }
+    )
 
 
 def logout_view(request: HttpRequest):
@@ -103,5 +109,14 @@ def logout_view(request: HttpRequest):
 class CheckAuth(APIView):
     authentication_classes = [SessionAuthentication]
 
-    def get(self, request):
-        return JsonResponse({"detail": "You're Authenticated"})
+    def get(self, request: HttpRequest):
+        if request.user.is_authenticated:
+            return JsonResponse(
+                {
+                    "email": request.user.email,
+                    "first_name": request.user.first_name,
+                    "last_name": request.user.last_name,
+                }
+            )
+
+        return JsonResponse({"detail": "Invalid credentials."}, status=401)
