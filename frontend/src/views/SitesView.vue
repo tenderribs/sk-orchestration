@@ -4,6 +4,7 @@ import { useToast } from '@/helpers/useToasts'
 import { type Site, Provider } from '@/models/site'
 import { SiteWebservice } from '@/webservices/site.webservice'
 import { computed, onMounted, ref, type Ref, watch } from 'vue'
+import SkModal from '@/components/SkModal.vue'
 
 type ProviderSelection = {
     provider: Provider
@@ -11,14 +12,15 @@ type ProviderSelection = {
 }
 
 const sites: Ref<Site[]> = ref([])
-const { error } = useToast()
+const { error, success } = useToast()
 
 const searchname: Ref<string> = ref('')
 const providers: Provider[] = Object.values(Provider)
+const newSiteModal: Ref<boolean> = ref(false)
 
 const selectedProviders = ref<ProviderSelection[]>(
     providers.map((provider: Provider) => {
-        return { provider, selected: true }
+        return { provider, selected: false }
     })
 )
 
@@ -49,6 +51,8 @@ const providerFilter = computed(() => {
             return provSel.selected
         })
         .map((provSel: ProviderSelection) => provSel.provider)
+
+    if (selection.length == 0) return searchFilter.value
 
     return searchFilter.value.filter((site: Site) => {
         return selection.includes(site.provider)
@@ -105,6 +109,20 @@ watch(filteredSites, () => {
     updateMarkers()
 })
 
+const newSite: Ref<Site> = ref({} as Site)
+
+const saveNewSite = async () => {
+    try {
+        await SiteWebservice.add(newSite.value)
+        newSiteModal.value = false
+
+        success('Created new site')
+        newSite.value = {} as Site
+    } catch (e: any) {
+        error(e?.detail)
+    }
+}
+
 onMounted(() => {
     getSites()
     initMap()
@@ -113,21 +131,62 @@ onMounted(() => {
 
 <template>
     <div>
+        <sk-modal v-if="newSiteModal" @close-modal="newSiteModal = false">
+            <template #content>
+                <div class="w-full">
+                    <input
+                        class="px-3 py-1 w-full mb-3"
+                        type="text"
+                        v-model="newSite.name"
+                        placeholder="Name"
+                    />
+                    <div class="flex flex-row mb-3">
+                        <input
+                            class="px-3 py-1 w-1/2 mr-3"
+                            type="text"
+                            v-model="newSite.wgs84_lat"
+                            placeholder="Latitude"
+                        />
+                        <input
+                            class="px-3 py-1 w-1/2"
+                            type="text"
+                            v-model="newSite.wgs84_lon"
+                            placeholder="Longitude"
+                        />
+                    </div>
+                    <div class="flex flex-row">
+                        <input
+                            class="px-3 py-1 w-full mr-3"
+                            type="text"
+                            v-model="newSite.masl"
+                            placeholder="MASL"
+                        />
+                        <input
+                            class="px-3 py-1 w-full"
+                            type="text"
+                            v-model="newSite.magl"
+                            placeholder="MAGL (optional)"
+                        />
+                    </div>
+                </div>
+            </template>
+
+            <template #actions>
+                <button class="w-24 mr-5" @click="saveNewSite">Save</button>
+                <button class="w-24" @click="newSiteModal = false">Cancel</button>
+            </template>
+        </sk-modal>
+
         <div class="font-bold text-2xl mb-5">Sites</div>
 
         <div class="flex lg:flex-row lg:items-start text-[14px]">
             <div class="w-full lg:w-1/2 hd:w-2/5 lg:pr-2">
                 <!-- Filters -->
-                <div class="flex flex-row items-center mb-3">
+                <div class="flex flex-row items-center justify-between mb-3">
                     <!-- Search -->
                     <div class="flex flex-row items-center w-1/2">
                         <i class="bi bi-search mr-3 text-gray-500 select-none"></i>
-                        <input
-                            id="inline-full-name "
-                            class="p-1 mr-3 w-full"
-                            type="text"
-                            v-model="searchname"
-                        />
+                        <input class="p-1 px-2 mr-3 w-full" type="text" v-model="searchname" />
                         <i
                             v-if="searchname.length"
                             @click="searchname = ''"
@@ -135,17 +194,28 @@ onMounted(() => {
                         ></i>
                     </div>
 
+                    <button
+                        class="hover:bg-primary/80 hover:text-white"
+                        @click="newSiteModal = !newSiteModal"
+                    >
+                        <i class="bi bi-plus"></i> New
+                    </button>
+
                     <!-- Selectors -->
-                    <div class="flex flex-row justify-end w-1/2">
-                        <div
-                            class="cursor-pointer select-none border-gray-200 border-[1px] px-2 py-1 ml-3 rounded"
-                            :class="provSelect.selected ? 'bg-primary text-white' : ''"
+                    <div class="flex flex-row justify-end">
+                        <button
+                            class="ml-3"
+                            :class="
+                                provSelect.selected
+                                    ? 'bg-primary text-white hover:bg-primary/80'
+                                    : 'hover:bg-slate-50 '
+                            "
                             v-for="provSelect in selectedProviders"
                             :key="provSelect.provider"
                             @click="provSelect.selected = !provSelect.selected"
                         >
                             {{ provSelect.provider }}
-                        </div>
+                        </button>
                     </div>
                 </div>
 
@@ -157,14 +227,19 @@ onMounted(() => {
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Provider</th>
-                                <th>Lat</th>
-                                <th>Lon</th>
+                                <!-- <th>Lat</th>
+                                <th>Lon</th> -->
                                 <th>MASL</th>
                                 <th>MAGL</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(site, index) in filteredSites" v-bind:key="site.id">
+                            <tr
+                                v-for="(site, index) in filteredSites"
+                                @click.prevent="searchname = site.name"
+                                class="hover:bg-gray-100 cursor-pointer"
+                                v-bind:key="site.id"
+                            >
                                 <td class="text-center">{{ index + 1 }}</td>
                                 <td>
                                     {{
@@ -174,12 +249,12 @@ onMounted(() => {
                                     }}
                                 </td>
                                 <td class="text-center">{{ site.provider }}</td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                     {{ Math.round(site.wgs84_lat * 100) / 100 }} N
                                 </td>
                                 <td class="text-center">
                                     {{ Math.round(site.wgs84_lon * 100) / 100 }} E
-                                </td>
+                                </td> -->
                                 <td class="text-center">{{ Math.round(site.masl) }} m</td>
                                 <td class="text-center">
                                     {{ site.magl ? site.magl + ' m' : 'N/A' }}
@@ -191,7 +266,7 @@ onMounted(() => {
             </div>
 
             <!-- Map -->
-            <div class="hidden lg:block lg:w-1/2 hd:w-3/5 lg:pl-2">
+            <div class="hidden lg:block lg:w-1/2 hd:w-3/5 lg:pl-2 z-0">
                 <div id="map" style="width: 100%; height: 85vh"></div>
             </div>
         </div>

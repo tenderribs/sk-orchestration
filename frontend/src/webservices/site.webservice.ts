@@ -10,6 +10,14 @@ export class SiteWebservice extends Webservice {
         })
     }
 
+    public static async add(site: Site) {
+        return this.request<Site>({
+            method: Webservice.methods.POST,
+            path: '/sites',
+            post: site
+        })
+    }
+
     public static async getCurrentUser() {
         return this.request<User>({
             method: Webservice.methods.GET,
