@@ -1,10 +1,9 @@
 import json
 
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.views import APIView
-
+from rest_framework.authentication import SessionAuthentication
 
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
@@ -19,6 +18,7 @@ from .serializers import (
     LoggerSerializer,
     InstallationSerializer,
     MeasurementSerializer,
+    UserSerializer,
 )
 
 
@@ -80,13 +80,15 @@ def get_csrf(request: HttpRequest):
 
 @require_POST
 def login_view(request: HttpRequest):
-    username = request.POST.get("username")
-    password = request.POST.get("password")
+    try:
+        data = json.loads(request.body)
+        username = data.get("username")
+        password = data.get("password")
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({"detail": "Invalid payload"}, status=422)
 
     if username is None or password is None:
-        return JsonResponse(
-            {"detail": "Please provide username and password."}, status=422
-        )
+        return JsonResponse({"detail": "Please provide username and password."}, status=422)
 
     user = authenticate(username=username, password=password)
 
@@ -94,7 +96,7 @@ def login_view(request: HttpRequest):
         return JsonResponse({"detail": "Invalid credentials."}, status=400)
 
     login(request, user)
-    return JsonResponse({"detail": "Successfully logged in."})
+    return JsonResponse(UserSerializer(user).data, status=200)
 
 
 def logout_view(request: HttpRequest):
@@ -103,3 +105,13 @@ def logout_view(request: HttpRequest):
 
     logout(request)
     return JsonResponse({"detail": "Successfully logged out."})
+
+
+class CheckAuth(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request: HttpRequest):
+        if request.user.is_authenticated:
+            return JsonResponse(UserSerializer(request.user).data, status=200)
+
+        return JsonResponse({"detail": "Invalid credentials."}, status=401)

@@ -16,21 +16,21 @@ services:
     networks:
       - sk-net
 
-  frontend:
-    image: "node:22-alpine"
-    container_name: sk-web
-    working_dir: /home/node/
-    user: "node"
-    ports:
-      - ${VITE_PORT:-3000}:${VITE_PORT:-3000}
-    depends_on:
-      - backend
-    command: sleep infinity
-    volumes:
-      - ./frontend/:/home/node
-      - ./frontend/dist:/home/node/dist/:rw
-    networks:
-      - sk-net
+  # frontend:
+  #   image: "node:22-alpine"
+  #   container_name: sk-frontend
+  #   working_dir: /home/node/
+  #   user: "node"
+  #   ports:
+  #     - ${VITE_PORT:-3000}:${VITE_PORT:-3000}
+  #   depends_on:
+  #     - backend
+  #   command: sleep infinity
+  #   volumes:
+  #     - ./frontend/:/home/node
+  #     - ./frontend/dist:/home/node/dist/:rw
+  #   networks:
+  #     - sk-net
 
   db: # local storage
     container_name: sk-db

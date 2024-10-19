@@ -1,4 +1,5 @@
 from api.models import Site, DeviceModel, Logger, Installation, Measurement
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 
@@ -30,3 +31,9 @@ class InstallationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Installation
         fields = "__all__"
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email", "first_name", "last_name")

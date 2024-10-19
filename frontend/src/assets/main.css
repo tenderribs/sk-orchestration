@@ -1,35 +1,33 @@
-@import './base.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url('../assets/fonts/HelveticaNeue-Light.otf');
+    font-weight: 300;
+    font-style: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url('../assets/fonts/HelveticaNeue-Roman.otf');
+    font-weight: 400;
+    font-style: normal;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+@font-face {
+    font-family: "HelveticaNeue";
+    src: url('../assets/fonts/HelveticaNeue-Medium.otf');
+    font-weight: 600;
+    font-style: normal;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+@font-face {
+    font-family: "HelveticaNeueHeavy";
+    src: url('../assets/fonts/HelveticaNeue-Heavy.otf');
+    font-weight: 700;
+    font-style: normal;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+input {
+    @apply  appearance-none border-[1px] border-gray-200 rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-primary;
 }
