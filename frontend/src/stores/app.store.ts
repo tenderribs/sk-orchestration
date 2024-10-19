@@ -3,7 +3,7 @@ import { type User } from '../models/user'
 
 
 type AppStore = {
-    user: undefined | User
+    user:  User | undefined
 }
 
 export const useAppStore = defineStore('app', {

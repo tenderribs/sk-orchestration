@@ -24,6 +24,11 @@ export type WebserviceRequest = {
     isCSRFCall?: boolean,
 }
 
+export type WebserviceError = {
+    code: number,
+    detail: string,
+}
+
 export class Webservice {
     public static methods: {
         [key: string]: WebserviceRequestMethods
@@ -111,10 +116,9 @@ export class Webservice {
             // @ts-ignore
             return Promise.resolve<T>( response.status === 200 ? response.data : {})
         } catch (err: any) {
-
             return Promise.reject({
-                code: err.response.code,
-                data: err.response.data
+                code: err.response?.status || 500,
+                detail: err.response?.data?.detail || 'An error occurred'
             })
         }
     }

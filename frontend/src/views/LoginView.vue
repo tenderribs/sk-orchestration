@@ -4,19 +4,24 @@ import { AuthWebservice } from '@/webservices/auth.webservice'
 import { useAppStore } from '@/stores/app.store'
 import type { User } from '@/models/user'
 import { useRouter } from 'vue-router'
+import { useToast } from '@/helpers/useToasts'
 
 const router = useRouter()
 const username: Ref<string> = ref('')
 const password: Ref<string> = ref('')
+
+const { success, error } = useToast()
 
 const submit = async () => {
     try {
         const user: User = await AuthWebservice.login(username.value, password.value)
 
         await useAppStore().setCurrentUser(user)
+        success('Logged in')
         router.push({ name: 'home' })
-    } catch (e) {
+    } catch (e: any) {
         await useAppStore().unsetCurrentUser()
+        error(e?.detail)
     }
 }
 </script>
