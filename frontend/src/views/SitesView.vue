@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import L from 'leaflet'
 import { useToast } from '@/helpers/useToasts'
 import { type Site, Provider } from '@/models/site'
 import { SiteWebservice } from '@/webservices/site.webservice'
-import { computed, onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref, type Ref, watch } from 'vue'
 
 type ProviderSelection = {
     provider: Provider
@@ -31,7 +32,6 @@ const getSites = async () => {
 
 // first filter
 const searchFilter = computed(() => {
-    // search for search string within site name or provider name
     if (searchname.value.length) {
         return sites.value.filter((site: Site) => {
             return (
@@ -44,14 +44,12 @@ const searchFilter = computed(() => {
 })
 
 const providerFilter = computed(() => {
-    // get the selected providers
     const selection: Provider[] = selectedProviders.value
         .filter((provSel: ProviderSelection) => {
             return provSel.selected
         })
         .map((provSel: ProviderSelection) => provSel.provider)
 
-    // and filter the sites by site.provider included in providers from search filter
     return searchFilter.value.filter((site: Site) => {
         return selection.includes(site.provider)
     })
@@ -61,8 +59,45 @@ const filteredSites = computed(() => {
     return providerFilter.value
 })
 
+let map: L.Map
+let markersLayer: L.LayerGroup
+
+// Function to initialize the Leaflet map
+const initMap = () => {
+    map = L.map('map').setView([47.4, 8.5], 12) // Initial center of the map (world view)
+
+    // Add the OSM tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map)
+
+    // Initialize an empty layer for markers
+    markersLayer = L.layerGroup().addTo(map)
+}
+
+// Function to update markers on the map
+const updateMarkers = () => {
+    // Clear the existing markers
+    markersLayer.clearLayers()
+
+    // Add markers for each site
+    filteredSites.value.forEach((site: Site) => {
+        const marker = L.marker([site.wgs84_lat, site.wgs84_lon]).bindPopup(
+            `<b>${site.name}</b><br>${site.provider}`
+        )
+        markersLayer.addLayer(marker)
+    })
+}
+
+// Watch for changes in filteredSites and update markers accordingly
+watch(filteredSites, () => {
+    updateMarkers()
+})
+
 onMounted(() => {
     getSites()
+    initMap()
 })
 </script>
 
@@ -70,8 +105,8 @@ onMounted(() => {
     <div>
         <div class="font-bold text-2xl mb-5">Sites</div>
 
-        <div class="flex flex-row items-start text-[14px]">
-            <div class="pr-10 w-1/2">
+        <div class="flex lg:flex-row lg:items-start text-[14px]">
+            <div class="w-full lg:w-1/2 hd:w-2/5 lg:pr-2">
                 <!-- Filters -->
                 <div class="flex flex-row items-center mb-3">
                     <!-- Search -->
@@ -94,7 +129,7 @@ onMounted(() => {
                     <div class="flex flex-row justify-end w-1/2">
                         <div
                             class="cursor-pointer select-none border-gray-200 border-[1px] px-2 py-1 ml-3 rounded"
-                            :class="provSelect.selected ? 'bg-slate-200' : ''"
+                            :class="provSelect.selected ? 'bg-primary text-white' : ''"
                             v-for="provSelect in selectedProviders"
                             :key="provSelect.provider"
                             @click="provSelect.selected = !provSelect.selected"
@@ -105,7 +140,7 @@ onMounted(() => {
                 </div>
 
                 <!-- List -->
-                <div class="overflow-y-auto overflow-x-hidden max-h-[80vh]">
+                <div class="overflow-y-auto overflow-x-auto max-h-[80vh]">
                     <table class="table-auto w-full">
                         <thead>
                             <tr>
@@ -146,7 +181,9 @@ onMounted(() => {
             </div>
 
             <!-- Map -->
-            <div></div>
+            <div class="hidden lg:block lg:w-1/2 hd:w-3/5 lg:pl-2">
+                <div id="map" style="width: 100%; height: 85vh"></div>
+            </div>
         </div>
     </div>
 </template>
