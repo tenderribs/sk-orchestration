@@ -39,6 +39,8 @@ export class Webservice {
 
         const url = !options.path.includes(VITE_APP_API_URL) ? VITE_APP_API_URL + options.path : options.path
 
+        const url_slash = !url.endsWith('/') ? url + "/" : url
+
         // Try to set CSRF token
         if(!options.isCSRFCall && getXsrfCookie() === '') {
             try {
@@ -57,7 +59,7 @@ export class Webservice {
                 'accept': 'application/json',
         }
 
-        return url
+        return url_slash
     }
 
     public static csrf() {
@@ -74,6 +76,23 @@ export class Webservice {
     public static async request<T>(options: WebserviceRequest): Promise<T> {
         const url: string = await this.prepare(options)
 
+        if(options.post) {
+            options.post = JSON.parse(JSON.stringify(options.post)) as WebserviceRequestPost
+
+            for(const [key, value] of Object.entries(options.post)) {
+                if(typeof value === 'object' && value) {
+                    if(value.id) {
+                        const idKey = key + '_id'
+
+                        // @ts-ignore
+                        options.post[idKey] = value.id
+                        // @ts-ignore
+                        delete options.post[key]
+                    }
+                }
+            }
+        }
+
         try {
             const response = await axios.request<T>({
                 method: options.method,
@@ -87,12 +106,16 @@ export class Webservice {
 
             JSON.parse(response.request.response) // Throws if not JSON
 
-            // @ts-ignore
-            return Promise.resolve<T>( response.data.success ? response.data.data : {})
-        } catch (err: any) {
-            const _e = err.response.data
+            console.log(response)
 
-            return Promise.reject(_e)
+            // @ts-ignore
+            return Promise.resolve<T>( response.status === 200 ? response.data : {})
+        } catch (err: any) {
+
+            return Promise.reject({
+                code: err.response.code,
+                data: err.response.data
+            })
         }
     }
 }

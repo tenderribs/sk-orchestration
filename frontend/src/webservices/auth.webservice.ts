@@ -2,14 +2,21 @@ import { Webservice } from '../Webservice'
 import { type User } from '../models/user'
 
 export class AuthWebservice extends Webservice {
-    public static async login(email: string, password: string) {
+    public static async login(username: string, password: string) {
         return this.request<User>({
             method: Webservice.methods.POST,
             path: '/login',
             post: {
-                email,
+                username,
                 password
             }
+        })
+    }
+
+    public static async logout() {
+        return this.request<void>({
+            method: Webservice.methods.POST,
+            path: '/logout',
         })
     }
 

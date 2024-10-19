@@ -3,16 +3,20 @@ import { ref, type Ref } from 'vue'
 import { AuthWebservice } from '@/webservices/auth.webservice'
 import { useAppStore } from '@/stores/app.store'
 import type { User } from '@/models/user'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const username: Ref<string> = ref('')
 const password: Ref<string> = ref('')
 
 const submit = async () => {
     try {
         const user: User = await AuthWebservice.login(username.value, password.value)
-        useAppStore().setCurrentUser(user)
+
+        await useAppStore().setCurrentUser(user)
+        router.push({ name: 'home' })
     } catch (e) {
-        useAppStore().unsetCurrentUser()
+        await useAppStore().unsetCurrentUser()
     }
 }
 </script>
@@ -26,13 +30,13 @@ const submit = async () => {
                         class="block font-bold md:text-right mb-1 md:mb-0 pr-4"
                         for="inline-full-name"
                     >
-                        Full Name
+                        Username
                     </label>
                 </div>
                 <div class="md:w-2/3">
                     <input
-                        class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                         id="inline-full-name"
+                        autocomplete="username"
                         type="text"
                         v-model="username"
                     />
@@ -49,11 +53,11 @@ const submit = async () => {
                 </div>
                 <div class="md:w-2/3">
                     <input
-                        class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                         id="inline-password"
+                        autocomplete="current-password"
                         type="password"
-                        placeholder="******************"
                         v-model="password"
+                        @keypress.enter="submit"
                     />
                 </div>
             </div>
@@ -61,7 +65,7 @@ const submit = async () => {
                 <div class="md:w-1/3"></div>
                 <div class="md:w-2/3">
                     <button
-                        class="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                        class="bg-primary hover:bg-primary/80 text-white py-2 px-4 rounded-md"
                         type="button"
                         @click="submit"
                     >
