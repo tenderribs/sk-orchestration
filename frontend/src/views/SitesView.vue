@@ -81,13 +81,23 @@ const updateMarkers = () => {
     // Clear the existing markers
     markersLayer.clearLayers()
 
+    if (filteredSites.value.length === 0) return
+
+    // Create a bounds object to track the geographical bounds of the markers
+    let points: L.LatLngBoundsLiteral = []
+
     // Add markers for each site
     filteredSites.value.forEach((site: Site) => {
         const marker = L.marker([site.wgs84_lat, site.wgs84_lon]).bindPopup(
             `<b>${site.name}</b><br>${site.provider}`
         )
         markersLayer.addLayer(marker)
+
+        points.push([site.wgs84_lat, site.wgs84_lon])
     })
+
+    // Fit the map view to the markers bounds, keeping the current zoom level
+    map.fitBounds(new L.LatLngBounds(points))
 }
 
 // Watch for changes in filteredSites and update markers accordingly
