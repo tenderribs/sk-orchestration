@@ -112,7 +112,6 @@ class CheckAuth(APIView):
 
     def get(self, request: HttpRequest):
         if request.user.is_authenticated:
-            print(UserSerializer(request.user).data)
             return JsonResponse(UserSerializer(request.user).data, status=200)
 
         return JsonResponse({"detail": "Invalid credentials."}, status=401)
