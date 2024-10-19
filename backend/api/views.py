@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import viewsets
 from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.views import APIView
@@ -16,6 +18,7 @@ from .serializers import (
     LoggerSerializer,
     InstallationSerializer,
     MeasurementSerializer,
+    UserSerializer,
 )
 
 
@@ -77,8 +80,12 @@ def get_csrf(request: HttpRequest):
 
 @require_POST
 def login_view(request: HttpRequest):
-    username = request.POST.get("username")
-    password = request.POST.get("password")
+    try:
+        data = json.loads(request.body)
+        username = data.get("username")
+        password = data.get("password")
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({"detail": "Invalid payload"}, status=422)
 
     if username is None or password is None:
         return JsonResponse({"detail": "Please provide username and password."}, status=422)
@@ -89,13 +96,7 @@ def login_view(request: HttpRequest):
         return JsonResponse({"detail": "Invalid credentials."}, status=400)
 
     login(request, user)
-    return JsonResponse(
-        {
-            "email": request.user.email,
-            "first_name": request.user.first_name,
-            "last_name": request.user.last_name,
-        }
-    )
+    return JsonResponse(UserSerializer(user).data, status=200)
 
 
 def logout_view(request: HttpRequest):
@@ -111,12 +112,7 @@ class CheckAuth(APIView):
 
     def get(self, request: HttpRequest):
         if request.user.is_authenticated:
-            return JsonResponse(
-                {
-                    "email": request.user.email,
-                    "first_name": request.user.first_name,
-                    "last_name": request.user.last_name,
-                }
-            )
+            print(UserSerializer(request.user).data)
+            return JsonResponse(UserSerializer(request.user).data, status=200)
 
         return JsonResponse({"detail": "Invalid credentials."}, status=401)
