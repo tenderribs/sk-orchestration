@@ -15,11 +15,15 @@ const { user } = storeToRefs(useAppStore())
             <span v-if="user">{{ user.username }}</span>
 
             <router-link v-if="!isLoggedIn" :to="{ name: 'login' }">Login</router-link>
-            <router-link class="cursor-pointer select-none" :to="{ name: 'logout' }" v-else>
-                Log out</router-link
-            >
+            <router-link :to="{ name: 'logout' }" v-else> Log out</router-link>
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+router-link,
+span {
+    cursor: pointer;
+    user-select: none;
+}
+</style>

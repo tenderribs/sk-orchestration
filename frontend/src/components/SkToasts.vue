@@ -5,7 +5,7 @@ const { toasts } = useToast()
 </script>
 <template>
     <div
-        class="fixed top-20 left-1/2 -translate-x-1/2 justify-center items-center flex flex-col z-50"
+        class="fixed top-20 left-1/2 -translate-x-1/2 justify-center items-center flex flex-col z-50 select-none"
     >
         <TransitionGroup name="list">
             <div v-for="toast in toasts" :key="toast.id">
