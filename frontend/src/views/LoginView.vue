@@ -40,6 +40,7 @@ const submit = async () => {
                 </div>
                 <div class="md:w-2/3">
                     <input
+                        class="w-full py-2 px-2"
                         id="inline-full-name"
                         autocomplete="username"
                         type="text"
@@ -58,6 +59,7 @@ const submit = async () => {
                 </div>
                 <div class="md:w-2/3">
                     <input
+                        class="w-full py-2 px-2"
                         id="inline-password"
                         autocomplete="current-password"
                         type="password"

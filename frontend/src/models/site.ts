@@ -1,4 +1,4 @@
-enum Provider {
+export enum Provider {
     UGZ = "UGZ",
     INNET = "INN",
     METEOBLUE = "MET",

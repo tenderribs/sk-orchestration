@@ -111,8 +111,6 @@ export class Webservice {
 
             JSON.parse(response.request.response) // Throws if not JSON
 
-            console.log(response)
-
             // @ts-ignore
             return Promise.resolve<T>( response.status === 200 ? response.data : {})
         } catch (err: any) {
