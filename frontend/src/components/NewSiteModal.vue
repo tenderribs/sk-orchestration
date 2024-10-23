@@ -14,7 +14,7 @@ const saveNewSite = async () => {
     try {
         await SiteWebservice.add(newSite.value)
 
-        success('Created new site')
+        success('Created new Site')
         newSite.value = {} as Site
 
         emit('close-new-site')
@@ -27,6 +27,10 @@ const saveNewSite = async () => {
 
 <template>
     <sk-modal @close-modal="emit('close-new-site')">
+        <!-- Title -->
+        <template #title>New Site</template>
+
+        <!-- Content -->
         <template #content>
             <div class="w-full">
                 <input
@@ -71,6 +75,7 @@ const saveNewSite = async () => {
             </div>
         </template>
 
+        <!-- Actions -->
         <template #actions>
             <button
                 class="w-24 mr-5 bg-primary hover:bg-primary/80 text-white"

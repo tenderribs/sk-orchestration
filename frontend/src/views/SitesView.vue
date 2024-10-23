@@ -5,6 +5,7 @@ import { type Site, Provider } from '@/models/site'
 import { SiteWebservice } from '@/webservices/site.webservice'
 import { computed, onMounted, ref, type Ref, watch } from 'vue'
 import NewSiteModal from '@/components/NewSiteModal.vue'
+import ManageSiteModal from '@/components/ManageSiteModal.vue'
 
 type ProviderSelection = {
     provider: Provider
@@ -17,12 +18,15 @@ const { error } = useToast()
 const searchname: Ref<string> = ref('')
 const providers: Provider[] = Object.values(Provider)
 const newSiteModal: Ref<boolean> = ref(false)
+const manageSiteModal: Ref<boolean> = ref(false)
 
 const selectedProviders = ref<ProviderSelection[]>(
     providers.map((provider: Provider) => {
         return { provider, selected: false }
     })
 )
+
+const clickedSite: Ref<Site> = ref({} as Site)
 
 const getSites = async () => {
     try {
@@ -117,7 +121,13 @@ onMounted(() => {
 
 <template>
     <div>
-        <new-site-modal v-if="newSiteModal" @close-new-site="newSiteModal = false" />
+        <NewSiteModal v-if="newSiteModal" @close-new-site="(newSiteModal = false), getSites()" />
+        <ManageSiteModal
+            v-if="manageSiteModal"
+            :site="clickedSite"
+            @close-manage-site="(manageSiteModal = false), getSites()"
+        />
+
         <div class="font-bold text-2xl mb-5">Sites</div>
 
         <div class="flex lg:flex-row lg:items-start text-[14px]">
@@ -125,7 +135,7 @@ onMounted(() => {
                 <!-- Filters -->
                 <div class="flex flex-row items-center justify-between mb-3">
                     <!-- Search -->
-                    <div class="flex flex-row items-center w-1/2">
+                    <div class="flex flex-row items-center w-2/5">
                         <i class="bi bi-search mr-3 text-gray-500 select-none"></i>
                         <input class="p-1 px-2 mr-3 w-full" type="text" v-model="searchname" />
                         <i
@@ -143,7 +153,7 @@ onMounted(() => {
                     </button>
 
                     <!-- Selectors -->
-                    <div class="flex flex-row justify-end">
+                    <div class="flex flex-row justify-end w-2/5">
                         <button
                             class="ml-3"
                             :class="
@@ -172,12 +182,13 @@ onMounted(() => {
                                 <th>Lon</th> -->
                                 <th>MASL</th>
                                 <th>MAGL</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr
                                 v-for="(site, index) in filteredSites"
-                                @click.prevent="searchname = site.name"
+                                @click="searchname = site.name"
                                 class="hover:bg-gray-100 cursor-pointer"
                                 v-bind:key="site.id"
                             >
@@ -199,6 +210,12 @@ onMounted(() => {
                                 <td class="text-center">{{ Math.round(site.masl) }} m</td>
                                 <td class="text-center">
                                     {{ site.magl ? site.magl + ' m' : 'N/A' }}
+                                </td>
+                                <td
+                                    class="text-center hover:text-gray-400"
+                                    @click.stop="(clickedSite = site), (manageSiteModal = true)"
+                                >
+                                    <i class="bi bi-pencil-square text-[12px]"></i>
                                 </td>
                             </tr>
                         </tbody>

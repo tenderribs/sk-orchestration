@@ -109,7 +109,7 @@ export class Webservice {
 
             if (options.passthroughResponse) return response as T
 
-            JSON.parse(response.request.response) // Throws if not JSON
+            if (response.status !== 204) JSON.parse(response.request.response) // Throws if not JSON
 
             // @ts-ignore
             return Promise.resolve<T>( response.status === 200 ? response.data : {})
