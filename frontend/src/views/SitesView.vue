@@ -63,8 +63,55 @@ const providerFilter = computed(() => {
     })
 })
 
-const filteredSites = computed(() => {
-    return providerFilter.value
+const sortKey: Ref<keyof Site> = ref('name')
+const sortASC: Ref<boolean> = ref(true)
+
+const setSortParams = (key: keyof Site) => {
+    sortKey.value = key
+    sortASC.value = !sortASC.value // toggle
+}
+
+type CompElement = string | number | undefined
+
+const cleanString = (s: string) =>
+    s
+        .replace('Ä', 'A')
+        .replace('ä', 'a')
+        .replace('Ü', 'U')
+        .replace('ü', 'u')
+        .replace('Ö', 'O')
+        .replace('ö', 'o')
+
+const compareSites = (a: CompElement, b: CompElement) => {
+    // one key is undefined (occurs on optional fields) -> prefer existing field
+    if (a && !b) return 1
+    if (!a && b) return -1
+
+    if (typeof a === 'string' && typeof b === 'string') {
+        a = cleanString(a)
+        b = cleanString(b)
+    }
+
+    // both are defined -> actually check
+    if (a && b) {
+        if (a > b) return 1
+        if (a < b) return -1
+    }
+    return 0
+}
+
+const sortedSites = computed(() => {
+    return [...providerFilter.value].sort((a: Site, b: Site) => {
+        if (sortASC.value) return compareSites(a[sortKey.value], b[sortKey.value])
+        else return compareSites(b[sortKey.value], a[sortKey.value])
+    })
+})
+
+const sortIcon = computed(() => {
+    if (sortASC.value) {
+        return 'bi bi-arrow-down'
+    }
+    return 'bi bi-arrow-up'
 })
 
 let map: L.Map
@@ -89,13 +136,13 @@ const updateMarkers = () => {
     // Clear the existing markers
     markersLayer.clearLayers()
 
-    if (filteredSites.value.length === 0) return
+    if (providerFilter.value.length === 0) return
 
     // Create a bounds object to track the geographical bounds of the markers
     let points: L.LatLngBoundsLiteral = []
 
     // Add markers for each site
-    filteredSites.value.forEach((site: Site) => {
+    providerFilter.value.forEach((site: Site) => {
         const marker = L.marker([site.wgs84_lat, site.wgs84_lon]).bindPopup(
             `<b>${site.name}</b><br>${site.provider}`
         )
@@ -108,8 +155,8 @@ const updateMarkers = () => {
     map.fitBounds(new L.LatLngBounds(points))
 }
 
-// Watch for changes in filteredSites and update markers accordingly
-watch(filteredSites, () => {
+// Watch for changes in providerFilter and update markers accordingly
+watch(providerFilter, () => {
     updateMarkers()
 })
 
@@ -176,18 +223,48 @@ onMounted(() => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
-                                <th>Provider</th>
-                                <!-- <th>Lat</th>
-                                <th>Lon</th> -->
-                                <th>MASL</th>
-                                <th>MAGL</th>
+                                <th
+                                    class="cursor-pointer select-none"
+                                    @click="setSortParams('name')"
+                                >
+                                    Name <i :class="sortIcon" v-show="sortKey === 'name'" />
+                                </th>
+                                <th
+                                    class="cursor-pointer select-none"
+                                    @click="setSortParams('provider')"
+                                >
+                                    Provider <i :class="sortIcon" v-show="sortKey === 'provider'" />
+                                </th>
+                                <th
+                                    class="cursor-pointer select-none"
+                                    @click="setSortParams('wgs84_lat')"
+                                >
+                                    Lat <i :class="sortIcon" v-show="sortKey === 'wgs84_lat'" />
+                                </th>
+                                <th
+                                    class="cursor-pointer select-none"
+                                    @click="setSortParams('wgs84_lon')"
+                                >
+                                    Lon <i :class="sortIcon" v-show="sortKey === 'wgs84_lon'" />
+                                </th>
+                                <th
+                                    class="cursor-pointer select-none"
+                                    @click="setSortParams('masl')"
+                                >
+                                    MASL <i :class="sortIcon" v-show="sortKey === 'masl'" />
+                                </th>
+                                <th
+                                    class="cursor-pointer select-none"
+                                    @click="setSortParams('magl')"
+                                >
+                                    MAGL <i :class="sortIcon" v-show="sortKey === 'magl'" />
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr
-                                v-for="(site, index) in filteredSites"
+                                v-for="(site, index) in sortedSites"
                                 @click="searchname = site.name"
                                 class="hover:bg-gray-100 cursor-pointer"
                                 v-bind:key="site.id"
@@ -201,12 +278,12 @@ onMounted(() => {
                                     }}
                                 </td>
                                 <td class="text-center">{{ site.provider }}</td>
-                                <!-- <td class="text-center">
+                                <td class="text-center">
                                     {{ Math.round(site.wgs84_lat * 100) / 100 }} N
                                 </td>
                                 <td class="text-center">
                                     {{ Math.round(site.wgs84_lon * 100) / 100 }} E
-                                </td> -->
+                                </td>
                                 <td class="text-center">{{ Math.round(site.masl) }} m</td>
                                 <td class="text-center">
                                     {{ site.magl ? site.magl + ' m' : 'N/A' }}
