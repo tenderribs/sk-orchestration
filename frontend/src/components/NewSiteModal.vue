@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { SiteWebservice } from '@/webservices/site.webservice'
-import SkModal from '@/components/SkModal.vue'
-import type { Site } from '@/models/site'
 import { ref, type Ref } from 'vue'
+
+import { SiteWebservice } from '@/webservices/site.webservice'
 import { useToast } from '@/helpers/useToasts'
+import { Provider, type Site } from '@/models/site'
+
+import SkDropdown from '@/components/SkDropdown.vue'
+import SkModal from '@/components/SkModal.vue'
 
 const emit = defineEmits(['close-new-site'])
 const { error, success } = useToast()
+
+const providers: string[] = Object.values<string>(Provider)
 
 const newSite: Ref<Site> = ref({} as Site)
 
@@ -33,13 +38,17 @@ const saveNewSite = async () => {
         <!-- Content -->
         <template #content>
             <div class="w-full">
-                <input
-                    class="px-3 py-1 w-full mb-3"
-                    maxlength="64"
-                    type="text"
-                    v-model="newSite.name"
-                    placeholder="Name"
-                />
+                <div class="flex flex-row mb-3">
+                    <input
+                        class="px-3 py-1 w-4/5 mr-3"
+                        maxlength="64"
+                        type="text"
+                        v-model="newSite.name"
+                        placeholder="Name"
+                    />
+                    <SkDropdown class="w-1/5" :options="providers" v-model="newSite.provider" />
+                </div>
+
                 <div class="flex flex-row mb-3">
                     <input
                         class="px-3 py-1 w-1/2 mr-3"
@@ -64,6 +73,7 @@ const saveNewSite = async () => {
                         v-model="newSite.masl"
                         placeholder="MASL"
                     />
+
                     <input
                         class="px-3 py-1 w-full"
                         type="text"

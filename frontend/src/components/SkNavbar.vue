@@ -8,9 +8,12 @@ import { isLoggedIn } from '@/helpers/useIsLoggedIn'
         <div class="container flex flex-row justify-between">
             <div>
                 <router-link class="font-bold" :to="{ name: 'home' }">UGZ Sensors</router-link>
-                <router-link class="pl-6" v-if="isLoggedIn" :to="{ name: 'sites' }"
-                    >Sites</router-link
-                >
+            </div>
+            <div v-if="isLoggedIn">
+                <router-link class="pr-8" :to="{ name: 'sites' }">Dashboard</router-link>
+                <router-link class="pr-8" :to="{ name: 'sites' }">Sites</router-link>
+                <router-link class="pr-8" :to="{ name: 'sites' }">Installations</router-link>
+                <router-link :to="{ name: 'sites' }">Loggers</router-link>
             </div>
             <div>
                 <router-link v-if="!isLoggedIn" :to="{ name: 'login' }">Login</router-link>

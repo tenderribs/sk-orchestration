@@ -21,7 +21,7 @@ const input = ref('')
             <div class="w-full">
                 <p class="mb-3">
                     Deletion will possibly remove linked entries in database. Confirm by retyping
-                    the challenge:
+                    the following:
                 </p>
                 <input
                     class="px-3 py-1 w-full"

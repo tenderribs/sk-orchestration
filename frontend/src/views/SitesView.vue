@@ -36,7 +36,8 @@ const getSites = async () => {
     }
 }
 
-// first filter
+// SEARCH / FILTERING
+
 const searchFilter = computed(() => {
     if (searchname.value.length) {
         return sites.value.filter((site: Site) => {
@@ -63,6 +64,8 @@ const providerFilter = computed(() => {
     })
 })
 
+// SORTING
+
 const sortKey: Ref<keyof Site> = ref('name')
 const sortASC: Ref<boolean> = ref(true)
 
@@ -74,13 +77,7 @@ const setSortParams = (key: keyof Site) => {
 type CompElement = string | number | undefined
 
 const cleanString = (s: string) =>
-    s
-        .replace('Ä', 'A')
-        .replace('ä', 'a')
-        .replace('Ü', 'U')
-        .replace('ü', 'u')
-        .replace('Ö', 'O')
-        .replace('ö', 'o')
+    s.toLocaleLowerCase().replace('ä', 'a').replace('ü', 'u').replace('ö', 'o')
 
 const compareSites = (a: CompElement, b: CompElement) => {
     // one key is undefined (occurs on optional fields) -> prefer existing field
@@ -113,6 +110,8 @@ const sortIcon = computed(() => {
     }
     return 'bi bi-arrow-up'
 })
+
+// Leaflet MAP
 
 let map: L.Map
 let markersLayer: L.LayerGroup
