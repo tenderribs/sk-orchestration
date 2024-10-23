@@ -13,7 +13,7 @@ const close = () => {
         >
             <div class="mb-4 text-3xl font-bold">New Site</div>
             <i
-                class="absolute right-5 top-5 bi bi-x text-2xl hover:text-gray-700 select-none cursor-pointer"
+                class="absolute right-5 top-5 bi bi-x text-2xl hover:text-gray-400 select-none cursor-pointer"
                 @click="close"
             ></i>
             <div>
