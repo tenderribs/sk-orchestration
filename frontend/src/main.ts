@@ -1,12 +1,12 @@
 import './assets/tailwind.css'
 import './assets/main.css'
+import 'leaflet/dist/leaflet.css';
 
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './main.router'
 import { createPinia } from 'pinia'
 import './main.xsrf'
-
 
 const app = createApp(App)
 const pinia = createPinia()

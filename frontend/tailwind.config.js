@@ -10,11 +10,14 @@ export default {
       },
       fontFamily: {
         sans: ['HelveticaNeue', 'sans-serif']
+      },
+      screens: {
+        'hd': '1920px',
       }
     },
     container: {
       center: true,
-
+      padding: '2rem'
     },
   },
   plugins: [],

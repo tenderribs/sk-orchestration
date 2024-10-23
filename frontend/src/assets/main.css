@@ -29,5 +29,14 @@
 }
 
 input {
-    @apply  appearance-none border-[1px] border-gray-200 rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-primary;
+    @apply  appearance-none border-[1px] border-gray-200 rounded text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-primary;
+}
+
+select {
+    @apply  appearance-none border-[1px] h-8 border-gray-200 rounded text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-primary;
+}
+
+
+button {
+    @apply cursor-pointer select-none rounded border-gray-200 border-[1px] px-2 py-1
 }

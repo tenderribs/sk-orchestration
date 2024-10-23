@@ -3,37 +3,37 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 
-class SiteSerializer(serializers.HyperlinkedModelSerializer):
+class SiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Site
         fields = "__all__"
 
 
-class DeviceModelSerializer(serializers.HyperlinkedModelSerializer):
+class DeviceModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviceModel
         fields = "__all__"
 
 
-class LoggerSerializer(serializers.HyperlinkedModelSerializer):
+class LoggerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Logger
         fields = "__all__"
 
 
-class MeasurementSerializer(serializers.HyperlinkedModelSerializer):
+class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = "__all__"
 
 
-class InstallationSerializer(serializers.HyperlinkedModelSerializer):
+class InstallationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Installation
         fields = "__all__"
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "email", "first_name", "last_name")
