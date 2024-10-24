@@ -53,10 +53,10 @@ const searchFilter = computed(() => {
 
 const organizationFilter = computed(() => {
     const selection: Organization[] = selectedOrganizations.value
-        .filter((provSel: OrganizationSelection) => {
-            return provSel.selected
+        .filter((orgSel: OrganizationSelection) => {
+            return orgSel.selected
         })
-        .map((provSel: OrganizationSelection) => provSel.organization)
+        .map((orgSel: OrganizationSelection) => orgSel.organization)
 
     if (selection.length == 0) return searchFilter.value
 
@@ -206,15 +206,15 @@ onMounted(() => {
                         <button
                             class="ml-3"
                             :class="
-                                provSelect.selected
+                                orgSelect.selected
                                     ? 'bg-primary text-white hover:bg-primary/80'
                                     : 'hover:bg-slate-50 '
                             "
-                            v-for="provSelect in selectedOrganizations"
-                            :key="provSelect.organization"
-                            @click="provSelect.selected = !provSelect.selected"
+                            v-for="orgSelect in selectedOrganizations"
+                            :key="orgSelect.organization"
+                            @click="orgSelect.selected = !orgSelect.selected"
                         >
-                            {{ provSelect.organization }}
+                            {{ orgSelect.organization }}
                         </button>
                     </div>
                 </div>
