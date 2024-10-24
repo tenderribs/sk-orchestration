@@ -4,61 +4,128 @@ from django.core.validators import MinValueValidator
 from django.utils.dateparse import parse_datetime
 
 
-class Site(models.Model):
-    class Providers(models.TextChoices):
-        UGZ = "UGZ", "Umwelt- und Gesundheitsschutz Zürich"
-        INNET = "INN", "INNET"
-        METEOBLUE = "MET", "Meteoblue"
-        AWEL = "AWE", "Amt für Abfall, Wasser, Energie und Luft"
+class Organization(models.TextChoices):
+    UGZ = "UGZ", "Umwelt- und Gesundheitsschutz Zürich"
+    INNET = "INN", "INNET"
+    METEOBLUE = "MET", "Meteoblue"
+    AWEL = "AWE", "Amt für Abfall, Wasser, Energie und Luft"
 
-    provider = models.CharField(max_length=3, choices=Providers.choices, default=Providers.UGZ)
+
+# Mutations to a logger
+class Actions(models.TextChoices):
+    CAL = "CAL", "Calibration"
+    PER = "PER", "Periodic Maintenance"
+    FWU = "FWU", "Firmware Update"
+    SRP = "SRP", "Sensor Replacement"
+    BRP = "BRP", "Battery Replacement"
+    DEX = "DEX", "Data Extraction"
+    FRS = "FRS", "Factory Reset"
+    INS = "INS", "Inspection"
+    ENV = "ENV", "Environmental Adjustment"
+    CLN = "CLN", "Cleaning"
+    MOV = "MOV", "Moved"
+
+
+class Site(models.Model):
+    organization = models.CharField(
+        max_length=3, choices=Organization.choices, default=Organization.UGZ
+    )
     name = models.CharField(max_length=64, unique=True)
     wgs84_lat = models.DecimalField(max_digits=7, decimal_places=5)
     wgs84_lon = models.DecimalField(max_digits=7, decimal_places=5)
     masl = models.DecimalField(max_digits=5, decimal_places=1, validators=[MinValueValidator(0.0)])
-    magl = models.DecimalField(
-        max_digits=4,
-        decimal_places=1,
-        validators=[MinValueValidator(0.0)],
-        null=True,
-        default=None,
-    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name} lat: {round(self.wgs84_lat, 2)} lon: {round(self.wgs84_lon, 2)} masl: {round(self.masl, 1)}"
 
 
+class Technician(models.Model):
+    name = models.CharField(max_length=64)
+    email = models.EmailField(unique=True, max_length=254)
+    description = models.CharField(max_length=256, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class DeviceModel(models.Model):
-    name = models.CharField(primary_key=True, unique=True, max_length=100)
-    datasheet = models.CharField(max_length=100, default="")
+    name = models.CharField(unique=True, max_length=100)
+    description = models.CharField(max_length=128, default="")
+    manufacturer_url = models.CharField(max_length=128, default="")
+    datasheet = models.FileField(upload_to="device-datasheets/", null=True, blank=True)
+    user_manual = models.FileField(upload_to="device-user_manual/", null=True, blank=True)
+    attachment = models.FileField(upload_to="device-attachments/", null=True, blank=True)
+    image = models.ImageField(upload_to="device-images/", null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
 
 class Logger(models.Model):
-    sensor_id = models.CharField(primary_key=True, unique=True, max_length=100)
-    sensor_serial = models.CharField(unique=True, max_length=100)
+    sensor_serial = models.CharField(unique=True, max_length=128)
+    sensor_tag = models.CharField(unique=True, max_length=128, null=True, blank=True)
+    organization = models.CharField(
+        max_length=3, choices=Organization.choices, default=Organization.UGZ
+    )
 
-    device_model = models.ForeignKey(DeviceModel, on_delete=models.CASCADE)
+    device_model = models.ForeignKey(DeviceModel, related_name="loggers", on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.sensor_id} ({self.device_model}) serial: {self.sensor_serial} "
+        return f"{self.sensor_id} ({self.device_model}) serial: {self.sensor_serial}"
+
+
+class LoggerAction(models.Model):
+    action = models.CharField(max_length=3, choices=Organization.choices, default=Organization.UGZ)
+
+    logger = models.ForeignKey(Logger, related_name="logger_actions", on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.sensor_id} ({self.device_model}) serial: {self.sensor_serial}"
 
 
 class Installation(models.Model):
-    technician = models.CharField(max_length=20)
     interval_s = models.IntegerField(default=600, validators=[MinValueValidator(0)])
     notes = models.CharField(max_length=512, default="")
     start = models.DateTimeField()
-    end = models.DateTimeField(null=True)
+    end = models.DateTimeField(null=True, blank=True)
+    image = models.ImageField(upload_to="installation-images/")
+    magl = models.DecimalField(
+        max_digits=4,
+        decimal_places=1,
+        validators=[MinValueValidator(0.0)],
+        null=True,
+        blank=True,
+        default=None,
+    )
 
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    logger = models.ForeignKey(Logger, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, related_name="installations", on_delete=models.CASCADE)
+    logger = models.ForeignKey(Logger, related_name="installations", on_delete=models.CASCADE)
+    technician = models.ForeignKey(
+        Technician, related_name="installations", on_delete=models.CASCADE
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def clean(self):
         if self.end and self.start >= self.end:
             raise ValidationError("Start time must be earlier than end time.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # Ensures validation rules from clean() are applied
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.site.name} {self.logger.device_model.name} {self.start} "
@@ -85,18 +152,23 @@ class Measurement(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=5)
     timestamp = models.DateTimeField()
 
-    installation = models.ForeignKey(Installation, on_delete=models.CASCADE)
+    installation = models.ForeignKey(
+        Installation, related_name="measurements", on_delete=models.CASCADE
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         self.timestamp = parse_datetime(self.timestamp)
 
         # Check if if the proposed measurement already exists in the database
-        newer_measurements = Measurement.objects.filter(
+        newer_measurements_exist = Measurement.objects.filter(
             installation=self.installation, meas_type=self.meas_type, timestamp__gte=self.timestamp
-        )
+        ).exists()
 
         # Proceed with the save operation only if the measurement is actually new
-        if not len(newer_measurements):
+        if not newer_measurements_exist:
             super(Measurement, self).save(*args, **kwargs)
 
     def __str__(self):
