@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import L from 'leaflet'
 import { useToast } from '@/helpers/useToasts'
-import { type Site, Provider } from '@/models/site'
+import { type Site, Organization } from '@/models/site'
 import { SiteWebservice } from '@/webservices/site.webservice'
 import { computed, onMounted, ref, type Ref, watch } from 'vue'
 import NewSiteModal from '@/components/NewSiteModal.vue'
 import ManageSiteModal from '@/components/ManageSiteModal.vue'
+import { redirectToLoginIfUnauthenticated } from '@/helpers/redirectToLoginIfUnauthenticated'
 
-type ProviderSelection = {
-    provider: Provider
+type OrganizationSelection = {
+    organization: Organization
     selected: boolean
 }
 
@@ -16,13 +17,13 @@ const sites: Ref<Site[]> = ref([])
 const { error } = useToast()
 
 const searchname: Ref<string> = ref('')
-const providers: Provider[] = Object.values(Provider)
+const organizations: Organization[] = Object.values(Organization)
 const newSiteModal: Ref<boolean> = ref(false)
 const manageSiteModal: Ref<boolean> = ref(false)
 
-const selectedProviders = ref<ProviderSelection[]>(
-    providers.map((provider: Provider) => {
-        return { provider, selected: false }
+const selectedOrganizations = ref<OrganizationSelection[]>(
+    organizations.map((organization: Organization) => {
+        return { organization, selected: false }
     })
 )
 
@@ -43,24 +44,24 @@ const searchFilter = computed(() => {
         return sites.value.filter((site: Site) => {
             return (
                 site.name.toLowerCase().includes(searchname.value.toLowerCase()) ||
-                site.provider.toLowerCase().includes(searchname.value.toLowerCase())
+                site.organization.toLowerCase().includes(searchname.value.toLowerCase())
             )
         })
     }
     return sites.value
 })
 
-const providerFilter = computed(() => {
-    const selection: Provider[] = selectedProviders.value
-        .filter((provSel: ProviderSelection) => {
+const organizationFilter = computed(() => {
+    const selection: Organization[] = selectedOrganizations.value
+        .filter((provSel: OrganizationSelection) => {
             return provSel.selected
         })
-        .map((provSel: ProviderSelection) => provSel.provider)
+        .map((provSel: OrganizationSelection) => provSel.organization)
 
     if (selection.length == 0) return searchFilter.value
 
     return searchFilter.value.filter((site: Site) => {
-        return selection.includes(site.provider)
+        return selection.includes(site.organization)
     })
 })
 
@@ -98,7 +99,7 @@ const compareSites = (a: CompElement, b: CompElement) => {
 }
 
 const sortedSites = computed(() => {
-    return [...providerFilter.value].sort((a: Site, b: Site) => {
+    return [...organizationFilter.value].sort((a: Site, b: Site) => {
         if (sortASC.value) return compareSites(a[sortKey.value], b[sortKey.value])
         else return compareSites(b[sortKey.value], a[sortKey.value])
     })
@@ -135,15 +136,15 @@ const updateMarkers = () => {
     // Clear the existing markers
     markersLayer.clearLayers()
 
-    if (providerFilter.value.length === 0) return
+    if (organizationFilter.value.length === 0) return
 
     // Create a bounds object to track the geographical bounds of the markers
     let points: L.LatLngBoundsLiteral = []
 
     // Add markers for each site
-    providerFilter.value.forEach((site: Site) => {
+    organizationFilter.value.forEach((site: Site) => {
         const marker = L.marker([site.wgs84_lat, site.wgs84_lon]).bindPopup(
-            `<b>${site.name}</b><br>${site.provider}`
+            `<b>${site.name}</b><br>${site.organization}`
         )
         markersLayer.addLayer(marker)
 
@@ -154,12 +155,14 @@ const updateMarkers = () => {
     map.fitBounds(new L.LatLngBounds(points))
 }
 
-// Watch for changes in providerFilter and update markers accordingly
-watch(providerFilter, () => {
+// Watch for changes in organizationFilter and update markers accordingly
+watch(organizationFilter, () => {
     updateMarkers()
 })
 
 onMounted(() => {
+    redirectToLoginIfUnauthenticated()
+
     getSites()
     initMap()
 })
@@ -207,11 +210,11 @@ onMounted(() => {
                                     ? 'bg-primary text-white hover:bg-primary/80'
                                     : 'hover:bg-slate-50 '
                             "
-                            v-for="provSelect in selectedProviders"
-                            :key="provSelect.provider"
+                            v-for="provSelect in selectedOrganizations"
+                            :key="provSelect.organization"
                             @click="provSelect.selected = !provSelect.selected"
                         >
-                            {{ provSelect.provider }}
+                            {{ provSelect.organization }}
                         </button>
                     </div>
                 </div>
@@ -230,9 +233,10 @@ onMounted(() => {
                                 </th>
                                 <th
                                     class="cursor-pointer select-none"
-                                    @click="setSortParams('provider')"
+                                    @click="setSortParams('organization')"
                                 >
-                                    Provider <i :class="sortIcon" v-show="sortKey === 'provider'" />
+                                    Organization
+                                    <i :class="sortIcon" v-show="sortKey === 'organization'" />
                                 </th>
                                 <th
                                     class="cursor-pointer select-none"
@@ -276,7 +280,7 @@ onMounted(() => {
                                             : site.name
                                     }}
                                 </td>
-                                <td class="text-center">{{ site.provider }}</td>
+                                <td class="text-center">{{ site.organization }}</td>
                                 <td class="text-center">
                                     {{ Math.round(site.wgs84_lat * 100) / 100 }} N
                                 </td>
@@ -307,10 +311,4 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped>
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-</style>
+<style scoped></style>
