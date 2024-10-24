@@ -1,4 +1,4 @@
-export enum Provider {
+export enum Organization {
     UGZ = "UGZ",
     INNET = "INN",
     METEOBLUE = "MET",
@@ -7,7 +7,7 @@ export enum Provider {
 
 export type Site = {
     id: number;
-    provider: Provider;
+    organization: Organization;
     name: string;
     wgs84_lat: number;
     wgs84_lon: number;

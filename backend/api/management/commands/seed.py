@@ -69,13 +69,13 @@ class Command(BaseCommand):
 
         def create_site(row: pd.DataFrame):
             """create Site and overwrite duplicates"""
-            provider = "AWE" if "(AWEL)" in row["Name"] else "UGZ"
+            organization = "AWE" if "(AWEL)" in row["Name"] else "UGZ"
             lat, lon = self.lv95_to_wgs84(float(row["N"]), float(row["E"]))
             site, _ = Site.objects.update_or_create(
-                provider=provider,
+                organization=organization,
                 name=row["Name"],
                 defaults={
-                    "provider": provider,
+                    "organization": organization,
                     "wgs84_lat": round(lat, 5),
                     "wgs84_lon": round(lon, 5),
                     "masl": round(float(row["masl"]), 1),
@@ -83,9 +83,9 @@ class Command(BaseCommand):
                 },
             )
 
-            return site, provider
+            return site, organization
 
-        def create_installation(row: pd.DataFrame, site, provider):
+        def create_installation(row: pd.DataFrame, site, organization):
             """create Installation https://docs.djangoproject.com/en/5.1/topics/i18n/timezones/#overview"""
 
             # localize start date
@@ -98,7 +98,7 @@ class Command(BaseCommand):
                 end = None
 
             Installation.objects.create(
-                technician=provider,
+                technician=organization,
                 start=start,
                 end=end,
                 site=site,
@@ -124,10 +124,10 @@ class Command(BaseCommand):
             )
 
             # Create Site
-            site, provider = create_site(row)
+            site, organization = create_site(row)
 
             # Create Installation
-            create_installation(row, site, provider)
+            create_installation(row, site, organization)
 
     def import_meteoblue_data(self):
         """
@@ -152,17 +152,17 @@ class Command(BaseCommand):
         )
 
         def import_static_data(df: pd.DataFrame):
-            # Prepare device models. provider barani is sensor "Barani" in meteoblue's CSV column, pessl is listed as "LoRain"
+            # Prepare device models. barani is sensor "Barani" in meteoblue's CSV column, pessl is listed as "LoRain"
             lorain, _ = DeviceModel.objects.get_or_create(name="LoRain")
             barani, _ = DeviceModel.objects.get_or_create(name="Barani-Helix")
 
             for index, row in df.iterrows():
                 # Site
                 site, _ = Site.objects.update_or_create(
-                    provider="MET",
+                    organization="MET",
                     name=row["streetName"],
                     defaults={
-                        "provider": "MET",
+                        "organization": "MET",
                         "wgs84_lat": round(row["latDecimal"], 5),
                         "wgs84_lon": round(row["lonDecimal"], 5),
                         "masl": round(row["masl"], 1),
@@ -254,14 +254,14 @@ class Command(BaseCommand):
         )
 
         mel = Site.objects.create(
-            provider="INN",
+            organization="INN",
             name="Büro MEL 5. OG VZE",
             wgs84_lat=47.41605,
             wgs84_lon=8.54310,
             masl=439,
         )
         vze_dach = Site.objects.create(
-            provider="INN",
+            organization="INN",
             name="VZE Dach Referenzstation",
             wgs84_lat=47.41588,
             wgs84_lon=8.54206,

@@ -75,7 +75,7 @@ def main():
     auth_headers = fetch_auth_headers()
 
     # Active INNET installations
-    installations = Installation.objects.filter(end=None, site__provider="INN")
+    installations = Installation.objects.filter(end=None, site__organization="INN")
 
     for installation in installations:
         deveui = installation.logger.sensor_id

@@ -2,7 +2,7 @@
 import { onMounted, ref, type Ref } from 'vue'
 
 import { SiteWebservice } from '@/webservices/site.webservice'
-import { Provider, type Site } from '@/models/site'
+import { Organization, type Site } from '@/models/site'
 import { useToast } from '@/helpers/useToasts'
 
 import SkModal from '@/components/SkModal.vue'
@@ -19,7 +19,7 @@ const { error, success } = useToast()
 const confirmDelete: Ref<boolean> = ref(false)
 
 const localSite: Ref<Site> = ref({} as Site)
-const providers: string[] = Object.values<string>(Provider)
+const organizations: string[] = Object.values<string>(Organization)
 
 const updateSite = async () => {
     try {
@@ -77,8 +77,8 @@ onMounted(() => {
                         />
                         <SkDropdown
                             class="w-1/5"
-                            :options="providers"
-                            v-model="localSite.provider"
+                            :options="organizations"
+                            v-model="localSite.organization"
                         />
                     </div>
                     <div class="flex flex-row mb-3">

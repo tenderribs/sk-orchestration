@@ -70,7 +70,7 @@ def main():
     for device, params in targets.items():
         # Get all active installations per device type
         installations = Installation.objects.filter(
-            end=None, logger__device_model__name=device, site__provider="MET"
+            end=None, logger__device_model__name=device, site__organization="MET"
         )
 
         print(f"Querying Meteoblue API for {len(installations)} {device} devices")

@@ -3,7 +3,7 @@ import { ref, type Ref } from 'vue'
 
 import { SiteWebservice } from '@/webservices/site.webservice'
 import { useToast } from '@/helpers/useToasts'
-import { Provider, type Site } from '@/models/site'
+import { Organization, type Site } from '@/models/site'
 
 import SkDropdown from '@/components/SkDropdown.vue'
 import SkModal from '@/components/SkModal.vue'
@@ -11,7 +11,7 @@ import SkModal from '@/components/SkModal.vue'
 const emit = defineEmits(['close-new-site'])
 const { error, success } = useToast()
 
-const providers: string[] = Object.values<string>(Provider)
+const organizations: string[] = Object.values<string>(Organization)
 
 const newSite: Ref<Site> = ref({} as Site)
 
@@ -46,7 +46,11 @@ const saveNewSite = async () => {
                         v-model="newSite.name"
                         placeholder="Name"
                     />
-                    <SkDropdown class="w-1/5" :options="providers" v-model="newSite.provider" />
+                    <SkDropdown
+                        class="w-1/5"
+                        :options="organizations"
+                        v-model="newSite.organization"
+                    />
                 </div>
 
                 <div class="flex flex-row mb-3">
