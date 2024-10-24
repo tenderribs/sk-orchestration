@@ -28,6 +28,12 @@
     font-style: normal;
 }
 
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
 input {
     @apply  appearance-none border-[1px] border-gray-200 rounded text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-primary;
 }
