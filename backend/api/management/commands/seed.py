@@ -6,7 +6,7 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from api.models import Site, DeviceModel, Installation, Logger
+from api.models import Site, DeviceModel, Installation, Logger, Technician
 
 
 class Command(BaseCommand):
@@ -79,13 +79,12 @@ class Command(BaseCommand):
                     "wgs84_lat": round(lat, 5),
                     "wgs84_lon": round(lon, 5),
                     "masl": round(float(row["masl"]), 1),
-                    "magl": (round(float(row["magl"]), 1) if "#" not in row["magl"] else None),
                 },
             )
 
             return site, organization
 
-        def create_installation(row: pd.DataFrame, site, organization):
+        def create_installation(row: pd.DataFrame, site, technician):
             """create Installation https://docs.djangoproject.com/en/5.1/topics/i18n/timezones/#overview"""
 
             # localize start date
@@ -98,13 +97,17 @@ class Command(BaseCommand):
                 end = None
 
             Installation.objects.create(
-                technician=organization,
+                technician=technician,
                 start=start,
                 end=end,
                 site=site,
                 logger=logger,
                 interval_s=600,
+                magl=row["magl"] if "#" not in row["magl"] else None,
             )
+
+        ugz_tech = Technician.objects.create(name="Mark Marolf", email="mark.marolf@zuerich.ch")
+        awel_tech = Technician.objects.create(name="Thomas von Allmen", email="luft@bd.zh.ch")
 
         # Iterate over the CSV file rows
         for index, row in csv_df.iterrows():
@@ -114,20 +117,23 @@ class Command(BaseCommand):
             # Create the Device Model
             dev_model, _ = DeviceModel.objects.update_or_create(name=name)
 
+            # Create Site
+            site, organization = create_site(row)
+
             # Create Loggers
             logger, _ = Logger.objects.update_or_create(
                 sensor_id=row["SensorID"],
                 defaults={
                     "sensor_serial": row["SensorSerial"],
                     "device_model": dev_model,
+                    "organization": organization,
                 },
             )
 
-            # Create Site
-            site, organization = create_site(row)
+            technician = ugz_tech if organization == "UGZ" else awel_tech
 
             # Create Installation
-            create_installation(row, site, organization)
+            create_installation(row, site, technician)
 
     def import_meteoblue_data(self):
         """
@@ -153,8 +159,19 @@ class Command(BaseCommand):
 
         def import_static_data(df: pd.DataFrame):
             # Prepare device models. barani is sensor "Barani" in meteoblue's CSV column, pessl is listed as "LoRain"
-            lorain, _ = DeviceModel.objects.get_or_create(name="LoRain")
-            barani, _ = DeviceModel.objects.get_or_create(name="Barani-Helix")
+            lorain, _ = DeviceModel.objects.get_or_create(
+                name="LoRain",
+                defaults={
+                    "manufacturer_url": "https://metos.global/en/lorain/",
+                },
+            )
+
+            barani, _ = DeviceModel.objects.get_or_create(
+                name="Barani-Helix",
+                defaults={
+                    "manufacturer_url": "https://www.baranidesign.com/meteohelix-pro-weather-station/",
+                },
+            )
 
             for index, row in df.iterrows():
                 # Site
@@ -166,16 +183,13 @@ class Command(BaseCommand):
                         "wgs84_lat": round(row["latDecimal"], 5),
                         "wgs84_lon": round(row["lonDecimal"], 5),
                         "masl": round(row["masl"], 1),
-                        "magl": None,
                     },
                 )
 
                 # Logger
                 device_model = barani if row["sensor"] == "Barani" else lorain
                 logger, _ = Logger.objects.update_or_create(
-                    sensor_id=row["stationID"],
-                    sensor_serial=f"{device_model.name}_{row['stationID']}",
-                    device_model=device_model,
+                    sensor_id=row["stationID"], device_model=device_model, organization="MET"
                 )
 
         def reconstruct_installations(df: pd.DataFrame):
@@ -183,6 +197,7 @@ class Command(BaseCommand):
             Reconstruct installations history by visiting each location and checking the installed loggers
             assume old end == new start in the installationDate column
             """
+            technician = Technician.objects.create(name="Meteoblue", email="info@meteoblue.com")
 
             for street in df["streetName"].unique():
                 # Sort entries corresponding to same site ascendingly
@@ -195,7 +210,6 @@ class Command(BaseCommand):
                 # The most recent installation has no end datetime and is currently active:
                 most_recent = entries.iloc[-1]
                 Installation.objects.create(
-                    technician="MET",
                     interval_s=600,
                     notes=most_recent["notes"],
                     start=self.format_datetime(
@@ -204,6 +218,7 @@ class Command(BaseCommand):
                     end=None,
                     site=Site.objects.get(name=most_recent["streetName"]),
                     logger=Logger.objects.get(sensor_id=most_recent["stationID"]),
+                    technician=technician,
                 )
 
                 # For all entries preceding the most recent entry
@@ -215,13 +230,13 @@ class Command(BaseCommand):
                     end = self.format_datetime(next_inst["installationDate"], "%Y-%m-%d %H:%M:%S")
 
                     Installation.objects.create(
-                        technician="MET",
                         interval_s=600,
                         notes=entries.iloc[index]["notes"],
                         start=start,
                         end=end,
                         site=Site.objects.get(name=curr_inst["streetName"]),
                         logger=Logger.objects.get(sensor_id=curr_inst["stationID"]),
+                        technician=technician,
                     )
 
         # Set up base information
@@ -235,22 +250,37 @@ class Command(BaseCommand):
         Import INNET data.
         There are so few INNET objects that it is easiest to register manually
         """
+        technician = Technician.objects.create(
+            name="Michael Blättler", email="michael.blaettler@innetag.ch"
+        )
 
         helix = DeviceModel.objects.get(name="Barani-Helix")
         blg = DeviceModel.objects.get(name="DL-BLG")
         atm22 = DeviceModel.objects.get(name="DL-Atmos-22")
 
         h766A = Logger.objects.create(
-            sensor_id="0004A30B00F7766A", sensor_serial="BDHEL017", device_model=helix
+            sensor_id="0004A30B00F7766A",
+            sensor_serial="BDHEL017",
+            device_model=helix,
+            organization="INN",
         )
         b821E = Logger.objects.create(
-            sensor_id="0004A30B0105821E", sensor_serial="DLBLG001", device_model=blg
+            sensor_id="0004A30B0105821E",
+            sensor_serial="DLBLG001",
+            device_model=blg,
+            organization="INN",
         )
         a3DD0 = Logger.objects.create(
-            sensor_id="70B3D57BA0003DD0", sensor_serial="DLATM22001", device_model=atm22
+            sensor_id="70B3D57BA0003DD0",
+            sensor_serial="DLATM22001",
+            device_model=atm22,
+            organization="INN",
         )
         h86D6 = Logger.objects.create(
-            sensor_id="0004A30B00F786D6", sensor_serial="BDHEL026", device_model=helix
+            sensor_id="0004A30B00F786D6",
+            sensor_serial="BDHEL026",
+            device_model=helix,
+            organization="INN",
         )
 
         mel = Site.objects.create(
@@ -269,36 +299,36 @@ class Command(BaseCommand):
         )
 
         Installation.objects.create(
-            technician="INNET",
             start="2024-08-22 10:50:45 +02:00",
             end=None,
             interval_s=600,
             site=vze_dach,
             logger=h766A,
+            technician=technician,
         )
         Installation.objects.create(
-            technician="INNET",
             start="2024-08-22 10:51:46 +02:00",
             end=None,
             interval_s=600,
             site=vze_dach,
             logger=b821E,
+            technician=technician,
         )
         Installation.objects.create(
-            technician="INNET",
             start="2024-08-22 10:51:22 +02:00",
             end=None,
             interval_s=600,
             site=vze_dach,
             logger=a3DD0,
+            technician=technician,
         )
         Installation.objects.create(
-            technician="INNET",
             start="2024-09-23 17:04:06 +02:00",
             end=None,
             interval_s=600,
             site=mel,
             logger=h86D6,
+            technician=technician,
         )
 
     def handle(self, *args, **kwargs):

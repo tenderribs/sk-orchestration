@@ -45,7 +45,7 @@ class Site(models.Model):
 class Technician(models.Model):
     name = models.CharField(max_length=64)
     email = models.EmailField(unique=True, max_length=254)
-    description = models.CharField(max_length=256, null=True, blank=True)
+    description = models.CharField(max_length=256, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -54,7 +54,8 @@ class Technician(models.Model):
 class DeviceModel(models.Model):
     name = models.CharField(unique=True, max_length=100)
     description = models.CharField(max_length=128, default="")
-    manufacturer_url = models.CharField(max_length=128, default="")
+    manufacturer_url = models.CharField(max_length=128, default="", blank=True)
+
     datasheet = models.FileField(upload_to="device-datasheets/", null=True, blank=True)
     user_manual = models.FileField(upload_to="device-user_manual/", null=True, blank=True)
     attachment = models.FileField(upload_to="device-attachments/", null=True, blank=True)
@@ -68,8 +69,8 @@ class DeviceModel(models.Model):
 
 
 class Logger(models.Model):
-    sensor_serial = models.CharField(unique=True, max_length=128)
-    sensor_tag = models.CharField(unique=True, max_length=128, null=True, blank=True)
+    sensor_id = models.CharField(unique=True, max_length=128)
+    sensor_serial = models.CharField(max_length=128, null=True, blank=True)
     organization = models.CharField(
         max_length=3, choices=Organization.choices, default=Organization.UGZ
     )
@@ -84,7 +85,7 @@ class Logger(models.Model):
 
 
 class LoggerAction(models.Model):
-    action = models.CharField(max_length=3, choices=Organization.choices, default=Organization.UGZ)
+    action = models.CharField(max_length=3, choices=Actions.choices, default=Actions.CAL)
 
     logger = models.ForeignKey(Logger, related_name="logger_actions", on_delete=models.CASCADE)
 
@@ -97,17 +98,12 @@ class LoggerAction(models.Model):
 
 class Installation(models.Model):
     interval_s = models.IntegerField(default=600, validators=[MinValueValidator(0)])
-    notes = models.CharField(max_length=512, default="")
+    notes = models.CharField(max_length=512, default="", blank=True)
     start = models.DateTimeField()
     end = models.DateTimeField(null=True, blank=True)
-    image = models.ImageField(upload_to="installation-images/")
+    image = models.ImageField(upload_to="installation-images/", null=True, blank=True)
     magl = models.DecimalField(
-        max_digits=4,
-        decimal_places=1,
-        validators=[MinValueValidator(0.0)],
-        null=True,
-        blank=True,
-        default=None,
+        max_digits=5, decimal_places=2, validators=[MinValueValidator(0.0)], null=True, blank=True
     )
 
     site = models.ForeignKey(Site, related_name="installations", on_delete=models.CASCADE)

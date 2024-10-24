@@ -5,6 +5,7 @@ django-cors-headers
 PyYAML # Schema generation support
 uritemplate # Schema generation support
 psycopg[binary] # PostgreSQL python drivers
+Pillow # Image saving
 
 # For CSV seeder
 pandas

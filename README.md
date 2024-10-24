@@ -43,7 +43,7 @@ gpg --gen-random 2 30 | base64
 # Run the migrations
 python manage.py migrate
 
-# Seed Provider data
+# Seed data
 python manage.py seed
 
 # And create a superuser for the admin panel

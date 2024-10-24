@@ -9,16 +9,18 @@ class SiteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class DeviceModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeviceModel
-        fields = "__all__"
-
-
 class LoggerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Logger
         fields = "__all__"
+
+
+class DeviceModelSerializer(serializers.ModelSerializer):
+    loggers = LoggerSerializer(many=True)
+
+    class Meta:
+        model = DeviceModel
+        fields = ["name", "datasheet", "loggers"]
 
 
 class MeasurementSerializer(serializers.ModelSerializer):

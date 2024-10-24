@@ -47,7 +47,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Created Groups"))
 
         if settings.DEBUG:
-            self.setup_conn_user()
+            self.setup_dev_user()
             self.stdout.write(
                 self.style.SUCCESS("Generated dev User (SHOULDN'T SEE THIS MSG IN PROD)")
             )
