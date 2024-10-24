@@ -18,4 +18,7 @@ export type Measurement = {
     meas_type: MeasurementType;
     value: number;
     timestamp: Date;
+
+    created_at: Date;
+    updated_at: Date;
 }

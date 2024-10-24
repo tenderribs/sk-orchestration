@@ -12,5 +12,6 @@ export type Site = {
     wgs84_lat: number;
     wgs84_lon: number;
     masl: number;
-    magl?: number;
+    created_at: Date;
+    updated_at: Date;
 }
