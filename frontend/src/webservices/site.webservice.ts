@@ -1,36 +1,21 @@
+import { ModelWebservice } from './model.webservice.ts'
 import type { Site } from '@/models/site'
-import { Webservice } from '../Webservice'
+import type { Logger } from '@/models/logger.js'
+import type { Installation } from '@/models/installation.js'
+import type { DeviceModel } from '@/models/deviceModel.js'
 
-export class SiteWebservice extends Webservice {
-    private static path = '/sites'
+export class SiteWebservice extends ModelWebservice<Site>() {
+    public static path = '/sites'
+}
 
-    public static async get() {
-        return this.request<Site[]>({
-            method: Webservice.methods.GET,
-            path: this.path,
-        })
-    }
+export class LoggerWebservice extends ModelWebservice<Logger>() {
+    public static path = '/loggers'
+}
 
-    public static async add(site: Site) {
-        return this.request<Site>({
-            method: Webservice.methods.POST,
-            path: this.path,
-            post: site
-        })
-    }
+export class InstallationWebservice extends ModelWebservice<Installation>() {
+    public static path = '/installations'
+}
 
-    public static async update(site: Site) {
-        return this.request<Site>({
-            method: Webservice.methods.PUT,
-            path: this.path + '/' + site.id,
-            post: site
-        })
-    }
-
-    public static async delete(site_id: number) {
-        return this.request<Site>({
-            method: Webservice.methods.DELETE,
-            path: this.path + '/' + site_id,
-        })
-    }
+export class DeviceModelWebservice extends ModelWebservice<DeviceModel>() {
+    public static path = '/devicemodels'
 }
