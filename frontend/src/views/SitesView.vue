@@ -75,7 +75,7 @@ const setSortParams = (key: keyof Site) => {
     sortASC.value = !sortASC.value // toggle
 }
 
-type CompElement = string | number | undefined
+type CompElement = string | number | Date | undefined
 
 const cleanString = (s: string) =>
     s.toLocaleLowerCase().replace('ä', 'a').replace('ü', 'u').replace('ö', 'o')
@@ -256,12 +256,7 @@ onMounted(() => {
                                 >
                                     MASL <i :class="sortIcon" v-show="sortKey === 'masl'" />
                                 </th>
-                                <th
-                                    class="cursor-pointer select-none"
-                                    @click="setSortParams('magl')"
-                                >
-                                    MAGL <i :class="sortIcon" v-show="sortKey === 'magl'" />
-                                </th>
+
                                 <th></th>
                             </tr>
                         </thead>
@@ -288,9 +283,6 @@ onMounted(() => {
                                     {{ Math.round(site.wgs84_lon * 100) / 100 }} E
                                 </td>
                                 <td class="text-center">{{ Math.round(site.masl) }} m</td>
-                                <td class="text-center">
-                                    {{ site.magl ? site.magl + ' m' : 'N/A' }}
-                                </td>
                                 <td
                                     class="text-center hover:text-gray-400"
                                     @click.stop="(clickedSite = site), (manageSiteModal = true)"

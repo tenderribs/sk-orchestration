@@ -22,11 +22,16 @@ const compare = (a: string | number, b: string | number) => {
     return -1
 }
 
+const deviceModelsComputed = computed(() => {
+    return [...deviceModels.value].sort((a: DeviceModel, b: DeviceModel) => {
+        return compare(b.loggers.length, a.loggers.length)
+    })
+})
+
 const getDeviceModels = async () => {
     try {
         deviceModels.value = await DeviceModelWebservice.get()
-
-        if (deviceModels.value.length) selectedModel.value = deviceModels.value[0]
+        if (deviceModelsComputed.value.length) selectedModel.value = deviceModelsComputed.value[0]
     } catch (e: any) {
         error(e?.detail)
     }
@@ -40,24 +45,13 @@ const loggers = computed(() => {
             // filter by search term
             .filter((logger: Logger) => {
                 if (!loggerSearchName.value) return true
-                return (
-                    logger.sensor_id.toLowerCase().includes(loggerSearchName.value.toLowerCase()) ||
-                    logger.sensor_serial
-                        .toLowerCase()
-                        .includes(loggerSearchName.value.toLowerCase())
-                )
+                return logger.sensor_id.toLowerCase().includes(loggerSearchName.value.toLowerCase())
             })
             // sort alphabetically
             .sort((a: Logger, b: Logger) => {
                 return compare(a.sensor_id, b.sensor_id)
             })
     )
-})
-
-const deviceModelsComputed = computed(() => {
-    return [...deviceModels.value].sort((a: DeviceModel, b: DeviceModel) => {
-        return compare(b.loggers.length, a.loggers.length)
-    })
 })
 
 onMounted(() => {
